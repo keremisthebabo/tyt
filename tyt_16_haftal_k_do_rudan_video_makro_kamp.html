@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>TYT 16 Haftalık Spor & Okul Entegre Makro Kampı</title>
+  
+  <meta name="theme-color" content="#0a0f1d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TYT Kampı">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            canvas: '#0a0f1d',
+            cardbg: '#131b2e',
+            cardhover: '#1a243d',
+            borderclr: '#1e2c47'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #0a0f1d !important;
+      color: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0f1d; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .alarm-ring {
+      animation: pulseRing 1.4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#0a0f1d] text-slate-100 min-h-screen flex flex-col antialiased relative">
+
+  <!-- Sağ Alt Hızlı Erişim Butonları -->
+  <div class="fixed bottom-5 right-5 z-40 flex flex-col gap-2.5 items-end">
+    <!-- Ertelenen Dersler Kuyruğu Butonu -->
+    <button onclick="toggleModal('shifted-lessons-modal')" id="shifted-queue-btn" class="group flex items-center gap-2 bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-xl shadow-rose-500/25 border border-rose-300/30 transition-all transform active:scale-95 hover:scale-105">
+      <span>🏖️</span>
+      <span class="tracking-wide">Zincirleme Kaydırma (<span id="shifted-count-badge">0</span> Gün)</span>
+    </button>
+
+    <!-- Saatlik Rutin Butonu -->
+    <button onclick="openHourlyModal()" class="group flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-xl shadow-amber-500/25 border border-amber-300/30 transition-all transform active:scale-95 hover:scale-105">
+      <span>⏱️</span>
+      <span class="tracking-wide">Spor & Saatlik Rutin</span>
+    </button>
+
+    <!-- 16 Haftalık Harita Butonu -->
+    <button onclick="toggleModal('full-roadmap-modal')" class="group flex items-center gap-2 bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-2xl shadow-sky-500/30 border border-sky-300/30 transition-all transform active:scale-95 hover:scale-105">
+      <span>🗺️</span>
+      <span class="tracking-wide">16 Haftalık Makro Harita</span>
+    </button>
+  </div>
+
+  <!-- Üst Menü / Navbar -->
+  <header class="sticky top-0 z-30 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-[#1e2c47]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+      
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-600 to-purple-600 flex items-center justify-center font-black text-lg text-white shadow-lg shadow-sky-500/20 shrink-0">
+          ⚡
+        </div>
+        <div class="truncate">
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-base font-bold text-white tracking-tight truncate">TYT 16 Haftalık Makro Kamp</h1>
+            <span class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-bold">Spor, Teşvik & Maarif</span>
+          </div>
+          <p class="text-[11px] text-slate-400 truncate">Upper/Lower &bull; Dershane Senkronlu &bull; Otomatik Ders Kaydırma</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- Teşvik Bildirimi / Motivasyon Butonu -->
+        <button onclick="triggerImmediateMotivation()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 text-xs font-semibold border border-purple-500/30 transition shadow-sm" title="Bana Teşvik Gönder">
+          <span>🔥</span> <span class="hidden sm:inline">Teşvik</span> Ateşle
+        </button>
+
+        <!-- Saatlik Plan Tuşu -->
+        <button onclick="openHourlyModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-500/15 hover:bg-orange-500/25 text-orange-400 text-xs font-semibold border border-orange-500/30 transition shadow-sm">
+          <span>🏋️‍♂️</span> <span class="hidden sm:inline">Saatlik</span> Rutin
+        </button>
+
+        <!-- Dahili Alarm Ayar Butonu -->
+        <button onclick="toggleModal('alarm-settings-modal')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 text-xs font-semibold border border-amber-500/30 transition shadow-sm">
+          <span id="nav-alarm-icon" class="animate-bounce">⏰</span>
+          <span id="nav-alarm-text">08:00</span>
+        </button>
+
+        <!-- Telegram Paylaşım Butonu -->
+        <button onclick="shareActiveWeekTelegram()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#229ED9]/15 hover:bg-[#229ED9]/25 text-[#229ED9] text-xs font-semibold border border-[#229ED9]/35 transition">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.18 3.35-1.39 3.73-1.39.08 0 .27.02.39.12.1.08.13.2.14.28-.01.06-.01.19-.03.39z"/></svg>
+          <span class="hidden sm:inline">Haftayı</span> Telegram'a At
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Canlı Motivasyon Bandı -->
+  <section class="bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-sky-900/40 border-b border-[#1e2c47]/70 px-4 py-2">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="flex h-2 w-2 relative shrink-0">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+        </span>
+        <span class="font-bold text-purple-300 shrink-0">Günün Teşviki:</span>
+        <span id="live-motivation-text" class="text-slate-200 truncate italic">"11. sınıfta TYT'yi bitiren, 12. sınıfta sınavın efendisi olur!"</span>
+      </div>
+      <button onclick="generateRandomMotivation()" class="text-slate-400 hover:text-purple-300 font-semibold shrink-0 text-[11px] underline">
+        Yenile ↻
+      </button>
+    </div>
+  </section>
+
+  <!-- Ana Gövde -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 space-y-6">
+
+    <!-- Makro İlerleme ve Haftalık Bilgi Paneli -->
+    <section class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-center relative z-10">
+        <div class="lg:col-span-2 space-y-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="current-phase-badge" class="text-[11px] uppercase tracking-wider font-extrabold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2.5 py-0.5 rounded-md">
+              Aşama 1: Temel İnşa & Sayılar
+            </span>
+            <span class="bg-orange-500/10 text-orange-400 border border-orange-500/25 text-[11px] px-2.5 py-0.5 rounded-md font-semibold flex items-center gap-1">
+              <span>💪</span> Upper/Lower Rutinli
+            </span>
+            <span id="alarm-status-pill" class="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[11px] px-2.5 py-0.5 rounded-md font-semibold flex items-center gap-1">
+              <span>🔔</span> Alarm Aktif: 08:00
+            </span>
+            <span id="shifted-header-badge" class="hidden bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] px-2.5 py-0.5 rounded-md font-semibold flex items-center gap-1">
+              <span>⚡</span> Zincirleme Kaydırma Aktif (0 Gün)
+            </span>
+          </div>
+          <h2 id="active-week-title" class="text-xl sm:text-2xl font-black text-white tracking-tight">
+            1. Hafta: Temel Kavramlar & Anlam Bilgisi
+          </h2>
+          <p id="active-week-desc" class="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-2xl">
+            Sayı kümelerini kavrama, okuduğunu anlama hızını artırma ve temel fen kavramlarını zihinde somutlaştırma dönemi.
+          </p>
+        </div>
+
+        <div class="bg-[#0b101c] border border-[#1e2c47] rounded-xl p-4 sm:p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex justify-between items-end mb-1.5 text-xs">
+              <span class="text-slate-400 font-medium">Genel TYT Başarısı (112 Gün):</span>
+              <span id="macro-percent" class="font-black text-emerald-400 text-sm">0%</span>
+            </div>
+            <!-- Segmented Makro İlerleme Çubuğu -->
+            <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden flex">
+              <div id="macro-bar-fill-done" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500" style="width: 0%" title="Tamamlanan Dersler"></div>
+              <div id="macro-bar-fill-shifted" class="h-full bg-gradient-to-r from-rose-500 to-red-600 transition-all duration-500" style="width: 0%" title="Kaydırılan Günler"></div>
+            </div>
+            <div class="flex flex-wrap justify-between items-center mt-2 text-[11px] gap-y-1">
+              <span class="text-emerald-400 font-semibold flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                <span id="macro-done-count">0</span> Tamamlandı
+              </span>
+              <span class="text-rose-400 font-semibold flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>
+                <span id="macro-shifted-count">0</span> Kaydırıldı
+              </span>
+              <span class="text-slate-500 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-slate-700 inline-block"></span>
+                <span id="macro-remaining-count">112</span> Kalan
+              </span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-[#1e2c47]/70">
+            <div class="flex justify-between items-end mb-1 text-xs">
+              <span class="text-slate-400 font-medium">Bu Haftaki Durum:</span>
+              <span id="week-percent" class="font-bold text-emerald-400">0%</span>
+            </div>
+            <!-- Segmented Haftalık İlerleme Çubuğu -->
+            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden flex">
+              <div id="week-bar-fill-done" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+              <div id="week-bar-fill-shifted" class="h-full bg-rose-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between items-center mt-1.5 text-[10px] text-slate-400">
+              <span id="week-details-text">0 Bitti • 0 Kaydırıldı</span>
+              <span id="week-remaining-text">7 Gün Kalan</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 Haftalık Seçici Butonlar -->
+    <section class="space-y-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs sm:text-sm font-bold text-slate-300 flex items-center gap-1.5">
+          <span>🗓️</span> Kamp Haftasını Seç (1 - 16):
+        </h3>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] text-slate-500 hidden sm:inline">Oklarla kaydır veya sürükle</span>
+          <div class="flex items-center gap-1">
+            <button onclick="scrollWeeks(-240)" title="Geri Kaydır" class="w-7 h-7 rounded-lg bg-[#131b2e] hover:bg-slate-700 border border-[#1e2c47] text-slate-300 flex items-center justify-center text-xs font-bold transition active:scale-90">
+              ◀
+            </button>
+            <button onclick="scrollWeeks(240)" title="İleri Kaydır" class="w-7 h-7 rounded-lg bg-[#131b2e] hover:bg-slate-700 border border-[#1e2c47] text-slate-300 flex items-center justify-center text-xs font-bold transition active:scale-90">
+              ▶
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hafta Butonları Kaydırma Kapsayıcısı -->
+      <div class="relative group">
+        <div id="week-tabs-container" class="flex gap-2 overflow-x-auto pb-2.5 pt-0.5 px-0.5 scroll-smooth select-none cursor-grab active:cursor-grabbing" style="scrollbar-width: thin; scrollbar-color: #334155 #0a0f1d;">
+          <!-- 16 hafta dinamik render edilecek -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Seçili Haftanın 7 Günlük Kartları -->
+    <section class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 id="week-header-label" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <span>📅</span> 1. Hafta Günlük Ders Akışı & Spor Entegresi
+          </h3>
+          <p class="text-xs text-slate-400">Dışarı çıktıysan turuncu tuşa bas; domino etkisiyle tüm dersler sonraki güne kayar, asla üst üste yığılma olmaz.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="openHourlyModal()" class="px-3.5 py-1.5 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+            <span>⏱️</span> Haftalık Saatlik Rutini Aç
+          </button>
+          <button onclick="resetCurrentWeek()" class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold transition">
+            🔄 Bu Haftayı Sıfırla
+          </button>
+        </div>
+      </div>
+
+      <!-- Günlük Kartlar Grid -->
+      <div id="active-days-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- JS ile 7 gün basılacak -->
+      </div>
+    </section>
+
+    <!-- Yanlış Defteri / Çözüm Analizi -->
+    <section class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl p-5 sm:p-6 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-[#1e2c47] pb-4">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <span>📝</span> Dijital Yanlış Defteri & Çıkarım Notları
+          </h3>
+          <p class="text-xs text-slate-400">Özel derslerde, okulda veya denemelerde takıldığın soru kalıplarını kaydet, Pazar günü tara.</p>
+        </div>
+        <button onclick="sendNotesToTelegram()" class="px-3 py-1.5 rounded-xl bg-[#229ED9]/15 hover:bg-[#229ED9]/25 text-[#229ED9] text-xs font-semibold border border-[#229ED9]/30 flex items-center gap-1.5 transition self-start sm:self-auto">
+          <span>📤</span> Notları Telegram'a Aktar
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Ders & Konu Başlığı</label>
+            <input id="note-topic-input" type="text" placeholder="Örn: Pazartesi Fizik Özel Dersi / Mert Hoca Mat" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Hata Analizi ve Çıkarılan Formül/Taktik</label>
+            <textarea id="note-body-input" rows="4" placeholder="Sürtünmeli düzlemde F-k.N bağıntısında normal kuvveti alırken eğik düzlem açısına dikkat..." class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 resize-none"></textarea>
+          </div>
+          <button onclick="addMistakeNote()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs transition shadow-md shadow-sky-500/20">
+            ➕ Yanlış Defterine Ekle
+          </button>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="text-xs font-semibold text-slate-400 mb-2.5 flex justify-between items-center">
+            <span>Kayıtlı Soru Analizlerin</span>
+            <span id="saved-notes-count" class="text-slate-500">0 Not</span>
+          </div>
+          <div id="notes-container" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+            <!-- Dinamik notlar -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MODALLAR ================= -->
+
+  <!-- 1. ERTELENEN / DIŞARI ÇIKILAN DERSLER LİSTESİ MODALI -->
+  <div id="shifted-lessons-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-[#1e2c47]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-600 text-white flex items-center justify-center text-xl font-bold shadow-md shadow-rose-500/20">
+            ⚡
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-black text-white">Zincirleme Kaydırılan Günler (Domino Çizelgesi)</h4>
+            <p class="text-xs text-slate-400">Dışarı çıktığın günler dinlenme olarak işaretlenir; kalan müfredat sonraki günlere kayarak derslerin çakışmasını engeller.</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('shifted-lessons-modal')" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition">✕</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 my-4 pr-1 space-y-3" id="shifted-lessons-container">
+        <!-- JS ile ertelenen günler doldurulacak -->
+      </div>
+
+      <div class="pt-4 border-t border-[#1e2c47] flex items-center justify-between gap-3 text-xs">
+        <span class="text-slate-400">💡 Bir günün kaydırmasını geri aldığında tüm müfredat otomatik olarak 1 gün geriye çekilir.</span>
+        <button onclick="toggleModal('shifted-lessons-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SPOR & SAATLİK RUTİN MODALI -->
+  <div id="hourly-routine-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-3xl max-w-4xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-[#1e2c47]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-xl font-bold shadow-md shadow-orange-500/20">
+            🏋️‍♂️
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-black text-white">Spor (Upper/Lower) & 11. Sınıf Entegre Saatlik Plan</h4>
+            <p class="text-xs text-slate-400">2 Gün Spor + 1 Gün Dinlenme Döngüsü & Özel Ders / Dershane / Deneme Zamanlaması</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('hourly-routine-modal')" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition">✕</button>
+      </div>
+
+      <!-- Günlük Hızlı Filtre Butonları -->
+      <div class="flex gap-2 overflow-x-auto py-3 no-scrollbar border-b border-[#1e2c47]/70 text-xs">
+        <button onclick="filterRoutineDay(0)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Pazartesi</button>
+        <button onclick="filterRoutineDay(1)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Salı</button>
+        <button onclick="filterRoutineDay(2)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Çarşamba</button>
+        <button onclick="filterRoutineDay(3)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Perşembe</button>
+        <button onclick="filterRoutineDay(4)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Cuma</button>
+        <button onclick="filterRoutineDay(5)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Cumartesi</button>
+        <button onclick="filterRoutineDay(6)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Pazar</button>
+        <button onclick="filterRoutineDay('all')" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Tüm Haftayı Gör</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 my-3 pr-1 space-y-4" id="routine-schedule-container">
+        <!-- JS ile detaylı saatlik bloklar doldurulacak -->
+      </div>
+
+      <div class="pt-3 border-t border-[#1e2c47] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div class="text-slate-400">
+          💡 <span class="text-amber-400 font-semibold">Beslenme & Uyku Notu:</span> Spordan sonra protein + karbonhidrat alımını yap, akşam TYT bloklarında ağır yemekten kaçın.
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="shareHourlyScheduleTelegram()" class="flex-1 sm:flex-initial px-4 py-2 bg-[#229ED9] hover:bg-[#1f8ec3] text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <span>✈️</span> Saatlik Planı Telegram'a At
+          </button>
+          <button onclick="toggleModal('hourly-routine-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">
+            Kapat
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CANLI ALARM ÇALMA MODALI -->
+  <div id="alarm-trigger-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-gradient-to-b from-[#17223b] to-[#131b2e] border-2 border-amber-500/80 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative text-center space-y-5">
+      <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full bg-amber-500/20 alarm-ring"></div>
+        <div class="w-16 h-16 rounded-full bg-amber-500 text-slate-900 flex items-center justify-center text-3xl font-black shadow-lg shadow-amber-500/50">
+          ⏰
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-extrabold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
+          Günün TYT & Spor Zamanı!
+        </span>
+        <h3 id="alarm-modal-subject" class="text-xl sm:text-2xl font-black text-white mt-2">
+          TYT Matematik: Temel Kavramlar
+        </h3>
+        <p id="alarm-modal-target" class="text-xs sm:text-sm text-slate-300 mt-1">
+          Hedef: 20 Paragraf + 35 Soru &bull; Eğitmen: Mert Hoca
+        </p>
+      </div>
+
+      <div class="p-3 bg-[#0b101c] rounded-2xl border border-[#1e2c47] text-left text-xs space-y-1">
+        <div class="text-slate-400 font-medium">📋 Günün Rutin Durumu:</div>
+        <div id="alarm-modal-note" class="text-slate-200 italic">Okul -> Spor -> Ders akışı aktif.</div>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button id="alarm-start-lesson-btn" onclick="stopAlarmAndGoLesson()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-500/25 transition active:scale-95 flex items-center justify-center gap-2">
+          <span>🚀</span> Alarmı Durdur ve Derse Başla
+        </button>
+        <button onclick="snoozeAlarm(5)" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition">
+          💤 5 Dakika Ertele
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ALARM AYARLARI MODALI -->
+  <div id="alarm-settings-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <button onclick="toggleModal('alarm-settings-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">✕</button>
+      
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl font-bold border border-amber-500/30">
+          ⏰
+        </div>
+        <div>
+          <h4 class="text-base font-bold text-white">Dahili TYT Hatırlatıcı & Teşvik</h4>
+          <p class="text-xs text-slate-400">Web Audio API & Otomatik Motivasyon Bildirimleri</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div class="p-3.5 bg-[#0b101c] rounded-xl border border-[#1e2c47] flex items-center justify-between">
+          <div>
+            <div class="font-bold text-slate-200">Günlük Hatırlatıcı</div>
+            <div class="text-[11px] text-slate-400">Belirlenen saatte zil çalar ve günün programını açar</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="alarm-toggle-input" onchange="toggleAlarmSetting(this.checked)" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
+
+        <div class="p-3.5 bg-[#0b101c] rounded-xl border border-[#1e2c47] space-y-2">
+          <label class="block font-bold text-slate-200">Alarm Saati</label>
+          <div class="flex items-center gap-3">
+            <input type="time" id="alarm-time-input" value="08:00" onchange="saveAlarmTime(this.value)" class="bg-slate-900 border border-[#1e2c47] text-white text-base font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-amber-400 w-36">
+            <span class="text-[11px] text-slate-400">Her gün bu saatte günün TYT & spor akışı tetiklenir.</span>
+          </div>
+        </div>
+
+        <div class="p-3.5 bg-[#0b101c] rounded-xl border border-[#1e2c47] flex items-center justify-between">
+          <div>
+            <div class="font-bold text-slate-200">Teşvik ve Bildirim İzni</div>
+            <div id="notif-permission-status" class="text-[11px] text-slate-400">Kontrol ediliyor...</div>
+          </div>
+          <button onclick="requestNotificationPermission()" class="px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 font-semibold text-xs border border-sky-500/30">
+            İzin İste
+          </button>
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <button onclick="testAlarmRing()" class="flex-1 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-bold transition flex items-center justify-center gap-1.5">
+            <span>🔔</span> Zili Test Et
+          </button>
+          <button onclick="triggerImmediateMotivation()" class="flex-1 py-2.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 font-bold transition flex items-center justify-center gap-1.5">
+            <span>🔥</span> Teşvik Bildir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. BÜTÜN MÜFREDAT HARİTASI MODALI -->
+  <div id="full-roadmap-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl max-w-5xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-[#1e2c47]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center text-xl font-bold">
+            🗺️
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-black text-white">TYT 16 Haftalık Sıfırdan Zirveye Makro Yol Haritası</h4>
+            <p class="text-xs text-slate-400">Doğrudan ders videoları ile desteklenmiş 112 günlük Maarif müfredat haritası</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('full-roadmap-modal')" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition">✕</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 my-4 pr-1 space-y-5">
+        <div id="roadmap-table-content" class="space-y-4">
+          <!-- JS ile doldurulacak -->
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-[#1e2c47] flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span class="text-xs text-slate-400">💡 Bir haftaya tıklayarak o haftanın günlerine ve video butonlarına gidebilirsin.</span>
+        <button onclick="toggleModal('full-roadmap-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Bildirimi -->
+  <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-6 z-50 bg-[#162033] border border-sky-500/40 text-slate-100 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs transition-all duration-300 opacity-0 pointer-events-none">
+    <span id="toast-icon">✨</span>
+    <span id="toast-message">İşlem gerçekleştirildi.</span>
+  </div>
+
+  <script>
+    // ================= 1. KULLANICIYA ÖZEL SPOR & OKUL SAATLİK DÖNGÜSÜ =================
+    const weeklyFixedSchedule = [
+      {
+        dayIndex: 0,
+        dayName: "Pazartesi",
+        fitnessType: "Upper Body (Üst Vücut)",
+        fitnessBadge: "🏋️‍♂️ Spor: Upper Body",
+        fitnessColor: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+        specialType: "11. Sınıf Fizik Özel Dersi (19:00 - 20:30)",
+        specialBadge: "⚡ 19:00 Fizik Özel Dersi",
+        specialColor: "bg-sky-500/15 text-sky-400 border-sky-500/30",
+        routineBlocks: [
+          { time: "08:30 - 16:00", title: "11. Sınıf Okul Dersleri", tag: "Okul", color: "text-slate-400 border-slate-700" },
+          { time: "16:30 - 18:00", title: "Fitness: Upper Body Antrenmanı", tag: "Spor", color: "text-amber-400 border-amber-500/40 font-semibold" },
+          { time: "18:00 - 19:00", title: "Spordan Çıkış & Özel Derse Geçiş / Hızlı Atıştırma", tag: "Geçiş", color: "text-slate-400 border-slate-700" },
+          { time: "19:00 - 20:30", title: "11. Sınıf Fizik Özel Dersi (Tam Odak)", tag: "Özel Ders", color: "text-sky-400 border-sky-500/40 font-bold" },
+          { time: "20:30 - 21:15", title: "Eve Dönüş & Akşam Yemeği / Dinlenme", tag: "Mola", color: "text-slate-400 border-slate-700" },
+          { time: "21:15 - 22:30", title: "TYT Matematik: Konu Videosu + 30 Soru", tag: "TYT Odak", color: "text-emerald-400 border-emerald-500/40 font-bold" },
+          { time: "22:30 - 23:00", title: "20 Paragraf Rutini + Fizik Özel Ders Notu Gözden Geçirme", tag: "Kapanış", color: "text-purple-400 border-purple-500/40" }
+        ]
+      },
+      {
+        dayIndex: 1,
+        dayName: "Salı",
+        fitnessType: "Lower Body (Alt Vücut & Bacak)",
+        fitnessBadge: "🦵 Spor: Lower Body",
+        fitnessColor: "bg-orange-500/15 text-orange-400 border-orange-500/30",
+        specialType: "Okul Çıkışı Spor -> Akşam TYT Çalışması",
+        specialBadge: null,
+        specialColor: "bg-purple-500/15 text-purple-400 border-purple-500/30",
+        routineBlocks: [
+          { time: "08:30 - 16:00", title: "11. Sınıf Okul Dersleri", tag: "Okul", color: "text-slate-400 border-slate-700" },
+          { time: "16:30 - 18:00", title: "Fitness: Lower Body (Bacak & Core)", tag: "Spor", color: "text-orange-400 border-orange-500/40 font-semibold" },
+          { time: "18:00 - 19:00", title: "Eve Dönüş, Duş & Akşam Yemeği", tag: "Dinlenme", color: "text-slate-400 border-slate-700" },
+          { time: "19:00 - 20:30", title: "TYT Türkçe: Konu Anlatımı & Paragraf Taktikleri", tag: "TYT Odak", color: "text-emerald-400 border-emerald-500/40 font-bold" },
+          { time: "20:45 - 22:00", title: "35 Paragraf Sorusu Çözümü & Süre Analizi", tag: "Soru Çözümü", color: "text-sky-400 border-sky-500/40 font-semibold" },
+          { time: "22:00 - 22:45", title: "11. Sınıf Okul Tekrarı & Yanlış Defteri", tag: "Kapanış", color: "text-slate-300 border-slate-700" }
+        ]
+      },
+      {
+        dayIndex: 2,
+        dayName: "Çarşamba",
+        fitnessType: "OFF Günü (Dinlenme / Rest Day)",
+        fitnessBadge: "🛌 Dinlenme (OFF Day)",
+        fitnessColor: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+        specialType: "Tam Odak Ev Çalışması (Spor Yok)",
+        specialBadge: null,
+        specialColor: "bg-sky-500/15 text-sky-400 border-sky-500/30",
+        routineBlocks: [
+          { time: "08:30 - 16:00", title: "11. Sınıf Okul Dersleri", tag: "Okul", color: "text-slate-400 border-slate-700" },
+          { time: "16:30 - 17:30", title: "Eve Dönüş, Dinlenme & Zihinsel Toparlanma", tag: "Mola", color: "text-slate-400 border-slate-700" },
+          { time: "17:30 - 19:15", title: "TYT Matematik: Konu Anlatımı & Modelleme", tag: "TYT Blok 1", color: "text-emerald-400 border-emerald-500/40 font-bold" },
+          { time: "19:15 - 20:00", title: "Akşam Yemeği & Mola", tag: "Mola", color: "text-slate-400 border-slate-700" },
+          { time: "20:00 - 21:30", title: "TYT Matematik Yeni Nesil Soru Çözümü (35 Soru)", tag: "TYT Blok 2", color: "text-sky-400 border-sky-500/40 font-bold" },
+          { time: "21:45 - 22:45", title: "20 Paragraf + Çözülemeyen Matematik Sorularının Analizi", tag: "Analiz", color: "text-purple-400 border-purple-500/40" }
+        ]
+      },
+      {
+        dayIndex: 3,
+        dayName: "Perşembe",
+        fitnessType: "Upper Body (Üst Vücut)",
+        fitnessBadge: "🏋️‍♂️ Spor: Upper Body",
+        fitnessColor: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+        specialType: "11. Sınıf Deneme Sınavı (17:00 - 19:30)",
+        specialBadge: "📝 17:00 Deneme Sınavı",
+        specialColor: "bg-rose-500/15 text-rose-400 border-rose-500/30",
+        routineBlocks: [
+          { time: "08:30 - 16:00", title: "11. Sınıf Okul Dersleri", tag: "Okul", color: "text-slate-400 border-slate-700" },
+          { time: "16:00 - 17:00", title: "Deneme Sınavı Merkezine Geçiş & Hazırlık", tag: "Geçiş", color: "text-slate-400 border-slate-700" },
+          { time: "17:00 - 19:30", title: "11. Sınıf Haftalık Deneme Sınavı (150 dk Odak)", tag: "Deneme", color: "text-rose-400 border-rose-500/50 font-black" },
+          { time: "19:45 - 21:00", title: "Fitness: Upper Body Antrenmanı", tag: "Spor", color: "text-amber-400 border-amber-500/40 font-bold" },
+          { time: "21:00 - 21:45", title: "Eve Dönüş, Duş & Yemek", tag: "Dinlenme", color: "text-slate-400 border-slate-700" },
+          { time: "21:45 - 22:45", title: "Deneme Sınavı Analizi & TYT Fizik Hızlı Video", tag: "Analiz/TYT", color: "text-emerald-400 border-emerald-500/40 font-semibold" }
+        ]
+      },
+      {
+        dayIndex: 4,
+        dayName: "Cuma",
+        fitnessType: "Lower Body (Alt Vücut & Bacak)",
+        fitnessBadge: "🦵 Spor: Lower Body",
+        fitnessColor: "bg-orange-500/15 text-orange-400 border-orange-500/30",
+        specialType: "11. Sınıf Dershane (16:40 - 18:10)",
+        specialBadge: "🏫 16:40 Dershane",
+        specialColor: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30",
+        routineBlocks: [
+          { time: "08:30 - 16:00", title: "11. Sınıf Okul Dersleri", tag: "Okul", color: "text-slate-400 border-slate-700" },
+          { time: "16:40 - 18:10", title: "11. Sınıf Dershane Dersleri", tag: "Dershane", color: "text-indigo-400 border-indigo-500/40 font-bold" },
+          { time: "18:30 - 19:45", title: "Fitness: Lower Body (Bacak & Kalf)", tag: "Spor", color: "text-orange-400 border-orange-500/40 font-semibold" },
+          { time: "20:00 - 20:45", title: "Eve Dönüş & Akşam Yemeği", tag: "Dinlenme", color: "text-slate-400 border-slate-700" },
+          { time: "20:45 - 22:15", title: "TYT Türkçe: Dil Bilgisi + 30 Soru", tag: "TYT Odak", color: "text-emerald-400 border-emerald-500/40 font-bold" },
+          { time: "22:15 - 22:45", title: "Dershane Notlarını Gözden Geçirme", tag: "Kapanış", color: "text-slate-300 border-slate-700" }
+        ]
+      },
+      {
+        dayIndex: 5,
+        dayName: "Cumartesi",
+        fitnessType: "OFF Günü (Dinlenme / Rest Day)",
+        fitnessBadge: "🛌 Dinlenme (OFF Day)",
+        fitnessColor: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+        specialType: "11. Sınıf Dershane (09:00 - 12:10)",
+        specialBadge: "🏫 09:00 - 12:10 Dershane",
+        specialColor: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30",
+        routineBlocks: [
+          { time: "09:00 - 12:10", title: "11. Sınıf Dershane Sabah Blokları", tag: "Dershane", color: "text-indigo-400 border-indigo-500/40 font-bold" },
+          { time: "12:10 - 14:00", title: "Dershane Çıkışı, Öğle Yemeği & Kafa Dağıtma", tag: "Mola", color: "text-slate-400 border-slate-700" },
+          { time: "14:00 - 16:00", title: "TYT Geometri: Konu + 25 Soru Çözümü", tag: "TYT Geo", color: "text-sky-400 border-sky-500/40 font-bold" },
+          { time: "16:00 - 16:30", title: "Ara Dinlenme & Çay/Kahve", tag: "Mola", color: "text-slate-400 border-slate-700" },
+          { time: "16:30 - 18:30", title: "TYT Kimya: Konu + 25 Soru Çözümü", tag: "TYT Kimya", color: "text-emerald-400 border-emerald-500/40 font-bold" },
+          { time: "19:30 - 21:30", title: "11. Sınıf Dershane Ödevleri + Serbest Dinlenme", tag: "Hafif Tekrar", color: "text-slate-300 border-slate-700" }
+        ]
+      },
+      {
+        dayIndex: 6,
+        dayName: "Pazar",
+        fitnessType: "Upper Body (Yeni Döngü Başlangıcı)",
+        fitnessBadge: "🏋️‍♂️ Spor: Upper Body",
+        fitnessColor: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+        specialType: "11. Sınıf Dershane (14:00 - 18:00)",
+        specialBadge: "🏫 14:00 - 18:00 Dershane",
+        specialColor: "bg-indigo-500/15 text-indigo-400 border-indigo-500/30",
+        routineBlocks: [
+          { time: "09:30 - 11:30", title: "TYT Biyoloji: Konu Videosu + 25 Soru", tag: "TYT Biyo", color: "text-emerald-400 border-emerald-500/40 font-bold" },
+          { time: "11:45 - 13:00", title: "Haftalık Yanlış Defteri Taraması & Çözülemeyen Sorular", tag: "Yanlış Defteri", color: "text-purple-400 border-purple-500/40 font-semibold" },
+          { time: "13:00 - 14:00", title: "Öğle Yemeği & Dershaneye Geçiş", tag: "Geçiş", color: "text-slate-400 border-slate-700" },
+          { time: "14:00 - 18:00", title: "11. Sınıf Dershane (4 Saatlik Blok)", tag: "Dershane", color: "text-indigo-400 border-indigo-500/40 font-bold" },
+          { time: "18:30 - 20:00", title: "Fitness: Upper Body Antrenmanı", tag: "Spor", color: "text-amber-400 border-amber-500/40 font-bold" },
+          { time: "20:30 - 21:30", title: "Akşam Yemeği & Yeni Haftanın Planını Gözden Geçirme", tag: "Kapanış", color: "text-slate-300 border-slate-700" }
+        ]
+      }
+    ];
+
+    // ================= 2. TEŞVİK VE MOTİVASYON SÖZLERİ =================
+    const motivationQuotes = [
+      "11. sınıfta TYT'yi bitiren öğrenci, 12. sınıfta sınavın stresini değil keyfini yaşar!",
+      "Rakiplerin 'Daha 11'deyiz, seneye bakarız' derken her gün attığın 1 adım seni ilk 10 bine taşır!",
+      "Disiplin; canın ders çalışmak istemediğinde bile masaya oturup hedefini gerçekleştirmektir.",
+      "Sporda kaldırılan o ağırlık ile masada çözülen o TYT sorusu aynı iradenin ürünüdür!",
+      "Bugün vazgeçtiğin her mazeret, yarın sınav sonuç belgende gurur tablosuna dönüşecek.",
+      "112 günlük bu yolculukta her tik, seni hayalindeki üniversite amfisine bir adım daha yaklaştırıyor.",
+      "Kendine inan: Upper-Lower rutiniyle bedenini, TYT Maarif planıyla zihnini zirveye taşıyorsun!",
+      "Yorulduğunda bırakma, sadece biraz nefes al ve bir sonraki soruya daha hırslı sarıl!",
+      "Günün sadece 2 saatini TYT'ye ayırmak, 12. sınıfta haftada 30 saatlik baskıdan seni kurtarır."
+    ];
+
+    const directChannels = {
+      mertHoca: "https://www.youtube.com/@MertHoca",
+      eyupB: "https://www.youtube.com/@eyupbmatematikgeometri",
+      rustuHoca: "https://www.youtube.com/@rustuhocaileturkce",
+      vipFizik: "https://www.youtube.com/@vipfizik",
+      gorkemSahin: "https://www.youtube.com/@BenimHocamOrtaokul",
+      kenanKara: "https://www.youtube.com/@KenanKaraileGeometri",
+      drBiyoloji: "https://www.youtube.com/@BARIŞHOCABİYOLOJİ"
+    };
+
+    const macroPhases = [
+      { id: 1, name: "Aşama 1: Temel İnşa & Sayılar / Anlam Bilgisi", weeks: [1, 2, 3, 4], color: "text-sky-400 bg-sky-500/10 border-sky-500/25" },
+      { id: 2, name: "Aşama 2: Denklem, Fonksiyon & Dil Bilgisi", weeks: [5, 6, 7, 8], color: "text-indigo-400 bg-indigo-500/10 border-indigo-500/25" },
+      { id: 3, name: "Aşama 3: Problemler, Üçgenler & Fen İskeleti", weeks: [9, 10, 11, 12], color: "text-purple-400 bg-purple-500/10 border-purple-500/25" },
+      { id: 4, name: "Aşama 4: PKOB, İleri Geometri, Sosyal & Denemeler", weeks: [13, 14, 15, 16], color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/25" }
+    ];
+
+    // 16 Haftalık Eksiksiz Müfredat Veritabanı
+    const weeksDatabase = [
+      {
+        weekNum: 1, phaseId: 1,
+        title: "1. Hafta: Temel Kavramlar & Anlam Bilgisi",
+        desc: "Sayı kümelerini kavrama, okuduğunu anlama hızını artırma ve temel fen kavramlarını zihinde somutlaştırma.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Temel Kavramlar & Sayı Kümeleri", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+tyt+temel+kavramlar", channelUrl: directChannels.mertHoca, note: "Rakam, doğal sayı, tam sayı kümeleri ve basamak çözümleme modellemesi." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Sözcükte ve Cümlede Anlam", teacher: "Rüştü Hoca", target: "35 Paragraf Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+sozcukte+anlam", channelUrl: directChannels.rustuHoca, note: "Kelime bağlamı ve cümlede örtük anlam çıkarma taktikleri." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Bölme - Bölünebilme Kuralları", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+bolme+bolunebilme", channelUrl: directChannels.eyupB, note: "Kalan bulma mantığı ve periyodik durumlar VDD analizi." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Fizik Bilimine Giriş & Madde-Özellik", teacher: "VIP Fizik", target: "Haftalık Deneme Analizi + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+fizik+bilimine+giris", channelUrl: directChannels.vipFizik, note: "Temel ve türetilmiş büyüklükler, adezyon-kohezyon modelleri." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Sözcük Türleri 1: İsimler & Sıfatlar", teacher: "Aker Kartal", target: "30 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+sozcuk+turleri", channelUrl: directChannels.rustuHoca, note: "Varlıkların nitelenmesi ve ad tamlamalarının metin analizi." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Doğruda Açılar + Kimya Bilimi", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+dogruda+acilar", channelUrl: directChannels.kenanKara, note: "Z, U, M kuralı mantığı ve simyadan kimyaya dönüşüm." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Canlıların Ortak Özellikleri & Haftalık Analiz", teacher: "Dr. Biyoloji", target: "Haftalık Yanlış Analizi + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+canlilarin+ortak+ozellikleri", channelUrl: directChannels.drBiyoloji, note: "Hücresel yapı, metabolizma ve homeostazi kavram haritası." }
+        ]
+      },
+      {
+        weekNum: 2, phaseId: 1,
+        title: "2. Hafta: Asal Sayılar, Rasyonel Sayılar & Paragraf Yapısı",
+        desc: "Kesir modellemeleri, asal çarpanlara ayırma ve metin yapılandırma teknikleri.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Asal Çarpanlar & EBOB - EKOK", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+ebob+ekok", channelUrl: directChannels.mertHoca, note: "Parçadan bütüne ve bütünden parçaya problem senaryoları." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Paragrafta Yapı & Akışı Bozan Cümleler", teacher: "Rüştü Hoca", target: "35 Paragraf Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+paragrafta+yapi", channelUrl: directChannels.rustuHoca, note: "Düşünce zincirini koparan ifadeleri tespit etme teknikleri." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Rasyonel ve Ondalık Sayılar", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+rasyonel+sayilar", channelUrl: directChannels.eyupB, note: "Sayı doğrusunda kesir konumlandırma ve devirli ondalıklar." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Katı, Sıvı ve Gazlarda Basınç", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+basinc", channelUrl: directChannels.vipFizik, note: "P=F/S modellemesi ve Pascal prensibi günlük hayat örnekleri." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Sözcük Türleri 2: Zamirler & Zarflar", teacher: "Aker Kartal", target: "30 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+zamirler+zarflar", channelUrl: directChannels.rustuHoca, note: "Fiili niteleyen durum, zaman ve miktar ilişkileri." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Üçgende Açılar + Atom ve Periyodik Sistem", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+ucgende+acilar", channelUrl: directChannels.gorkemSahin, note: "İç açılar toplamı ispatı ve periyodik özelliklerin değişimi." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "İnorganik ve Organik Bileşikler", teacher: "Dr. Biyoloji", target: "Haftalık Yanlış Analizi + 30 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+organik+bilesikler", channelUrl: directChannels.drBiyoloji, note: "Monomer-polimer yapısı ve bağ türleri haritası." }
+        ]
+      },
+      {
+        weekNum: 3, phaseId: 1,
+        title: "3. Hafta: Eşitsizlik, Mutlak Değer & Sıvıların Kaldırma Kuvveti",
+        desc: "Sayı doğrusunda aralık mantığı, mutlak uzaklık ve Arşimet prensibi.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Birinci Dereceden Basit Eşitsizlikler", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+basit+esitsizlikler", channelUrl: directChannels.mertHoca, note: "Aralık kavramı ve eşitsizliklerde işaret yönü değiştirme kuralları." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Paragrafta Ana Düşünce & Yardımcı Fikirler", teacher: "Rüştü Hoca", target: "35 Paragraf Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+paragrafta+ana+dusunce", channelUrl: directChannels.rustuHoca, note: "Yazarın vermek istediği temel mesajı süzme taktikleri." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Mutlak Değer Modellemesi & Geometrik Yorum", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+mutlak+deger", channelUrl: directChannels.eyupB, note: "|x-a| ifadesini sayı doğrusunda uzaklık olarak modelleme." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Kaldırma Kuvveti & Yüzme Şartları", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+kaldirma+kuvveti", channelUrl: directChannels.vipFizik, note: "Batan hacim, yoğunluk ilişkisi ve taşırma kapları mantığı." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Edat, Bağlaç, Ünlem & Fiiller (Anlam/Kip)", teacher: "Aker Kartal", target: "30 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+edat+baglac+unlem", channelUrl: directChannels.rustuHoca, note: "Söz öbekleri arasındaki anlamsal bağlar ve kip kayması." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Özel Üçgenler (30-60-90, İkizkenar) + Kimyasal Türler", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+ozel+ucgenler", channelUrl: directChannels.kenanKara, note: "Pisagor bağıntısı ve iyonik-kovalent bağ modellemeleri." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Enzimler, Vitaminler ve Nükleik Asitler", teacher: "Dr. Biyoloji", target: "Yanlış Defteri Tekrarı + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+enzimler", channelUrl: directChannels.drBiyoloji, note: "Aktivasyon enerjisi grafikleri ve ATP sentez mekanizması." }
+        ]
+      },
+      {
+        weekNum: 4, phaseId: 1,
+        title: "4. Hafta: Üslü - Köklü Sayılar & Aşama 1 Değerlendirmesi",
+        desc: "Kuvvet ve kök kavramı, hücre yapısı ve 1. Aşama toparlama taraması.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Üslü İfadeler ve Özellikleri", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+uslu+sayilar", channelUrl: directChannels.mertHoca, note: "Üstel büyüme, basamak sayısı bulma ve bilimsel gösterim." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Anlatım Teknikleri & Düşünceyi Geliştirme Yolları", teacher: "Rüştü Hoca", target: "35 Paragraf Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+anlatim+teknikleri", channelUrl: directChannels.rustuHoca, note: "Tanımlama, örneklendirme, tanık gösterme ve karşılaştırma." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Köklü İfadeler ve Eşlenik", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+koklu+sayilar", channelUrl: directChannels.eyupB, note: "Kök dışına çıkarma ve paydada köklü ifade bırakmama mantığı." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Isı, Sıcaklık ve İç Enerji", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+isi+sicaklik", channelUrl: directChannels.vipFizik, note: "Hal değişimi grafikleri, genleşme ve ısı iletim yolları." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Ek Fiil ve Fiilde Çatı Mantığı", teacher: "Aker Kartal", target: "30 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+fiilde+cati", channelUrl: directChannels.rustuHoca, note: "Özne-nesne ilişkisi (etken, edilgen, geçişli, geçişsiz)." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Eşkenar Üçgen + Maddenin Halleri", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+eskenar+ucgen", channelUrl: directChannels.gorkemSahin, note: "Yükseklik-açıortay çakışması ve gaz yasaları mantığı." },
+          { day: "Pazar", subj: "Aşama 1 Taraması", topic: "Hücre Teorisi, Organeller & Genel Tarama", teacher: "Dr. Biyoloji", target: "1. Aşama Mini TYT Taraması + Analiz", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+hucre+ve+organeller", channelUrl: directChannels.drBiyoloji, note: "Prokaryot-ökaryot farkı ve 1-4. haftanın genel pekiştirmesi." }
+        ]
+      },
+      {
+        weekNum: 5, phaseId: 2,
+        title: "5. Hafta: Çarpanlara Ayırma, Oran - Orantı & Fiilimsiler",
+        desc: "Cebirsel özdeşlikler, orantı çeşitleri ve cümlenin yapısal unsurları.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Çarpanlara Ayırma ve Özdeşlikler", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+carpanlara+ayirma", channelUrl: directChannels.mertHoca, note: "İki kare farkı, tam kare açılımı ve sadeleştirme modellemeleri." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Fiilimsiler (İsim-fiil, Sıfat-fiil, Zarf-fiil)", teacher: "Rüştü Hoca", target: "30 Dil Bilgisi + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+fiilimsiler", channelUrl: directChannels.rustuHoca, note: "Ek-eylem ayrımı ve yan cümlecik kurma görevi analizi." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Oran - Orantı ve Problem Temeli", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+oran+oranti", channelUrl: directChannels.eyupB, note: "Doğru ve ters orantı kurguları, bileşik orantı mantığı." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Doğrusal Hareket (Hız, Sürat, İvme)", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+dogrusal+hareket", channelUrl: directChannels.vipFizik, note: "Konum-zaman ve hız-zaman grafiklerinin eğimi ve alanı." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Sözcükte Yapı: Kökler ve Ekler (Çekim/Yapım)", teacher: "Aker Kartal", target: "35 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+sozcukte+yapi", channelUrl: directChannels.rustuHoca, note: "Gövdeden türeme ve sözcüğün anlamsal kökünü bulma taktiği." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Üçgende Açıortay Bağıntıları + Karışımlar", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+aciortay", channelUrl: directChannels.kenanKara, note: "İç açıortay kollar/tabanlar oranı ve kütlece yüzde derişim." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Hücre Zarından Madde Geçişleri", teacher: "Dr. Biyoloji", target: "Haftalık Yanlış Analizi + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+hucre+zarindan+madde+gecisleri", channelUrl: directChannels.drBiyoloji, note: "Turgor, plazmoliz ve ATP harcanan geçiş modelleri." }
+        ]
+      },
+      {
+        weekNum: 6, phaseId: 2,
+        title: "6. Hafta: Birinci Dereceden Denklemler & Cümle Ögeleri",
+        desc: "Denklem kurma altyapısı, cümlenin ögeleri ve Newton yasaları.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Birinci Dereceden Denklemler", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+birinci+dereceden+denklemler", channelUrl: directChannels.mertHoca, note: "Yok etme ve yerine koyma metoduyla denklem çözümü." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Cümlenin Ögeleri (Yüklem, Özne, Nesne)", teacher: "Rüştü Hoca", target: "30 Dil Bilgisi + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+cumlenin+ogeleri", channelUrl: directChannels.rustuHoca, note: "Öbekleri parçalamadan temel ve yardımcı ögeleri bulma." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Denklem Çözüm Kümeleri & Sonsuz/Boş Küme", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+denklemler", channelUrl: directChannels.eyupB, note: "Katsayı oranları ve analitik doğruların kesişim mantığı." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Newton'ın Hareket Yasaları & Sürtünme", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+newtonun+hareket+yasalari", channelUrl: directChannels.vipFizik, note: "Eylemsizlik, F=m.a ve etki-tepki çifti çıkarımı." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Cümle Türleri (Yapı, Anlam ve Yükleme Göre)", teacher: "Aker Kartal", target: "30 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+cumle+turleri", channelUrl: directChannels.rustuHoca, note: "Basit, birleşik, sıralı ve bağlı cümle çözümlemeleri." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Üçgende Kenarortay + Asitler ve Bazlar", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+kenarortay", channelUrl: directChannels.gorkemSahin, note: "Ağırlık merkezi kuralları ve nötralleşme tepkimeleri." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Mitoz Bölünme & Eşeysiz Üreme", teacher: "Dr. Biyoloji", target: "Yanlış Defteri Tekrarı + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+mitoz+bolunme", channelUrl: directChannels.drBiyoloji, note: "Kromozom sayısı grafikleri ve evrelerin şematik dizilimi." }
+        ]
+      },
+      {
+        weekNum: 7, phaseId: 2,
+        title: "7. Hafta: Kümeler, Mantık & Yazım Kuralları",
+        desc: "Küme problemleri, Venn şemaları, mantık bağlaçları ve yazım kuralları.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Kümelerde Temel İşlemler & Venn Şeması", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+kumeler", channelUrl: directChannels.mertHoca, note: "Birleşim, kesişim, fark ve tümleme işlemleri." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Yazım Kuralları (Büyük Harfler, Birleşik Kelimeler)", teacher: "Rüştü Hoca", target: "35 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+yazim+kurallari", channelUrl: directChannels.rustuHoca, note: "TDK'nin güncel kuralları ve en çok karıştırılan kelimeler." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Küme Problemleri & Sembolik Mantık", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+kumeler", channelUrl: directChannels.eyupB, note: "Diller, sporlar ve kesişim formüllerinin modellemesi." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "İş, Güç ve Mekanik Enerji", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+is+guc+enerji", channelUrl: directChannels.vipFizik, note: "Kinetik-potansiyel enerji dönüşümleri ve sürtünme kaybı." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Yazım Kuralları 2: 'de', 'ki', 'mi' Yazımı", teacher: "Aker Kartal", target: "35 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+de+ki+mi+yazimi", channelUrl: directChannels.rustuHoca, note: "Bağlaç olan ile ek olan eklerin kesin ayırt etme taktikleri." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Üçgende Benzerlik (Tales, Kelebek) + Tuzlar", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+ucgende+benzerlik", channelUrl: directChannels.kenanKara, note: "Tales teoremi, kelebek kuralı ve yaygın tuzların özellikleri." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Mayoz Bölünme & Eşeyli Üreme", teacher: "Dr. Biyoloji", target: "Yanlış Defteri Tekrarı + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+mayoz+bolunme", channelUrl: directChannels.drBiyoloji, note: "Krossing-over, homolog kromozom ayrılması ve genetik çeşitlilik." }
+        ]
+      },
+      {
+        weekNum: 8, phaseId: 2,
+        title: "8. Hafta: Fonksiyonlara Giriş, Noktalama & Aşama 2 Değerlendirmesi",
+        desc: "Tanım-değer kümesi, fonksiyon grafikleri, noktalama işaretleri ve 2. Aşama taraması.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Fonksiyon Tanımı, Değer Bulma ve Türleri", teacher: "Mert Hoca", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+fonksiyonlar", channelUrl: directChannels.mertHoca, note: "Birebir, örten, sabit ve birim fonksiyon modelleri." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Noktalama İşaretleri 1 (Nokta, Virgül)", teacher: "Rüştü Hoca", target: "35 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+noktalama+isaretleri", channelUrl: directChannels.rustuHoca, note: "Virgülün kullanıldığı ve asla kullanılamayacağı yerler." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Fonksiyonlarda Bileşke & Ters Fonksiyon", teacher: "Eyüp B.", target: "20 Paragraf + 35 Mat Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+fonksiyonlar", channelUrl: directChannels.eyupB, note: "(fog)(x) kuralı ve f^-1(x) cebirsel çıkarımı." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Elektrostatik (Yükler, Elektroskop)", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+elektrostatik", channelUrl: directChannels.vipFizik, note: "Sürtünme, dokunma ve etki ile elektriklenme modelleri." },
+          { day: "Cuma", subj: "TYT Türkçe", topic: "Noktalama İşaretleri 2 (İki Nokta, Kesme)", teacher: "Aker Kartal", target: "35 Dil Bilgisi Sorusu", directUrl: "https://www.youtube.com/results?search_query=aker+kartal+noktalama+isaretleri", channelUrl: directChannels.rustuHoca, note: "Özel adlara gelen eklerin ayrılması ve alıntı cümleler." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Üçgende Alan + Mol Hesaplamaları", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+ucgende+alan", channelUrl: directChannels.gorkemSahin, note: "Taban x Yükseklik / 2 ve mol-kütle-hacim dönüşümleri." },
+          { day: "Pazar", subj: "Aşama 2 Taraması", topic: "Kalıtım Temel İlkeleri (Mendel) + 2. Aşama Analizi", teacher: "Dr. Biyoloji", target: "2. Aşama Mini TYT Taraması + Analiz", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+kalitim", channelUrl: directChannels.drBiyoloji, note: "Monohibrit-dihibrit çaprazlama ve kan grupları analizi." }
+        ]
+      },
+      {
+        weekNum: 9, phaseId: 3,
+        title: "9. Hafta: Problemler Kampı 1: Sayı & Kesir Problemleri",
+        desc: "TYT'nin can damarı: Denklem kurma, kesir paydası eşitleme ve problem stratejileri.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Sayı Problemleri (Mum, Adım, Sıra, Tel)", teacher: "Mert Hoca", target: "20 Paragraf + 30 Sayı Problemi", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+sayi+problemleri", channelUrl: directChannels.mertHoca, note: "Bilinmeyen seçerken paydaların EKOK'unu kullanma." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Ses Bilgisi (Ünlü Düşmesi, Benzeşme)", teacher: "Rüştü Hoca", target: "30 Dil Bilgisi + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+ses+bilgisi", channelUrl: directChannels.rustuHoca, note: "Kelime kökünden ek alırken gerçekleşen ses olayları analizi." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Kesir Problemleri & Yeni Nesil Senaryolar", teacher: "Eyüp B.", target: "20 Paragraf + 30 Problem", directUrl: "https://www.youtube.com/results?search_query=eyup+b+kesir+problemleri", channelUrl: directChannels.eyupB, note: "Geriye kalanın kalanı kurguları ve kap modellemeleri." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Elektrik Akımı, Dirençler & Ohm Yasası", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+elektrik+akimi", channelUrl: directChannels.vipFizik, note: "Seri-paralel bağlama, V=I.R ve eşdeğer direnç bulma." },
+          { day: "Cuma", subj: "TYT Matematik", topic: "Yaş Problemleri (Kişiler Arası Sabit Fark)", teacher: "Mert Hoca", target: "20 Paragraf + 25 Problem", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+yas+problemleri", channelUrl: directChannels.mertHoca, note: "Zaman geçtikçe yaş farkının asla değişmeyeceği mantığı." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Açı - Kenar Bağıntıları + Tepkime Türleri", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+aci+kenar+bagintilari", channelUrl: directChannels.kenanKara, note: "Büyük açı karşısında büyük kenar kuralı ve çökelme tepkimeleri." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Ekolojiye Giriş (Ekosistem ve Besin Zinciri)", teacher: "Dr. Biyoloji", target: "Yanlış Defteri Tekrarı + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+ekoloji", channelUrl: directChannels.drBiyoloji, note: "Besin zinciri, trofik düzeyler ve biyolojik birikim." }
+        ]
+      },
+      {
+        weekNum: 10, phaseId: 3,
+        title: "10. Hafta: Problemler Kampı 2: Yüzde, Kâr-Zarar & Karışım",
+        desc: "Yüzde hesabı, maliyet-satış ilişkisi ve kap karışım problemleri.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Yüzde ve İskonto Problemleri", teacher: "Mert Hoca", target: "20 Paragraf + 30 Yüzde Problemi", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+yuzde+problemleri", channelUrl: directChannels.mertHoca, note: "Maliyeti 100x kabul etme yöntemi ve zam üstüne indirim." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Anlatım Bozuklukları (Anlamsal ve Yapısal)", teacher: "Rüştü Hoca", target: "30 Dil Bilgisi + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+anlatim+bozukluklari", channelUrl: directChannels.rustuHoca, note: "Gereksiz sözcük kullanımı ve öge eksiklikleri." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Kâr - Zarar & Enflasyon Problemleri", teacher: "Eyüp B.", target: "20 Paragraf + 30 Problem", directUrl: "https://www.youtube.com/results?search_query=eyup+b+kar+zarar+problemleri", channelUrl: directChannels.eyupB, note: "Alış fiyatı, etiket fiyatı ve net kar marjı denklemleri." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Elektriksel Güç, Enerji ve Lambalar", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+lambalar", channelUrl: directChannels.vipFizik, note: "Lambaların parlaklığı (P=I^2.R ve P=V^2/R) analizi." },
+          { day: "Cuma", subj: "TYT Matematik", topic: "Karışım Problemleri (Saf Madde Eşitliği)", teacher: "Mert Hoca", target: "20 Paragraf + 25 Karışım Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+karisim+problemleri", channelUrl: directChannels.mertHoca, note: "Madde miktarı x Yüzde = Toplam saf madde eşitliği." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Çokgenler & Düzgün Çokgenlerde Açılar", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+cokgenler", channelUrl: directChannels.gorkemSahin, note: "Dış açılar toplamı (360 derece) kuralı ve Kütlenin Korunumu kanunu." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Madde Döngüleri (Karbon, Azot) ve Çevre", teacher: "Dr. Biyoloji", target: "Yanlış Defteri Tekrarı + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+madde+donguleri", channelUrl: directChannels.drBiyoloji, note: "Azot fiksasyonu, nitrifikasyon ve denitrifikasyon bakterileri." }
+        ]
+      },
+      {
+        weekNum: 11, phaseId: 3,
+        title: "11. Hafta: Problemler Kampı 3: Hız - Hareket & İşçi Problemleri",
+        desc: "x = v.t formülü, zıt/aynı yönlü hareket, tren-tünel ve dairesel pist modelleri.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Hız - Hareket Problemleri 1 (Doğrusal Pist)", teacher: "Mert Hoca", target: "20 Paragraf + 30 Hız Problemi", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+hiz+problemleri", channelUrl: directChannels.mertHoca, note: "Zıt yönde hızlar toplamı, aynı yönde hızlar farkı." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Paragrafta Çoklu Sorular (Metne Bağlı Sorular)", teacher: "Rüştü Hoca", target: "35 Paragraf Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+paragrafta+coklu+sorular", channelUrl: directChannels.rustuHoca, note: "Metni bir kere okuyup iki soruyu birden çözme zaman yönetimi." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Hız Problemleri 2 (Tren-Tünel, Nehir)", teacher: "Eyüp B.", target: "20 Paragraf + 30 Problem", directUrl: "https://www.youtube.com/results?search_query=eyup+b+hiz+problemleri", channelUrl: directChannels.eyupB, note: "Trenin kendi boyunu ekleme ve akıntı hızı etkileşimi." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Mıknatıslar ve Manyetik Alan", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+miknatislar", channelUrl: directChannels.vipFizik, note: "Manyetik alan çizgileri, N-S kutup etkileşimi ve pusula sapması." },
+          { day: "Cuma", subj: "TYT Matematik", topic: "İşçi Problemleri ve Birlikte Çalışma", teacher: "Mert Hoca", target: "20 Paragraf + 25 Problem", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+isci+problemleri", channelUrl: directChannels.mertHoca, note: "Birim zamanda yapılan iş üzerinden 1/t1 + 1/t2 = 1/T eşitliği." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Dörtgenler ve Yamukta Alan + Çevre Kimyası", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+yamuk", channelUrl: directChannels.kenanKara, note: "Orta taban formülü, ikizkenar yamuk özellikleri ve sera gazları." },
+          { day: "Pazar", subj: "TYT Biyoloji & Tekrar", topic: "Canlılar Dünyası ve Sınıflandırma", teacher: "Dr. Biyoloji", target: "Yanlış Defteri Tekrarı + 25 Biyoloji", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+siniflandirma", channelUrl: directChannels.drBiyoloji, note: "Türden aleme kategoriler ve ikili adlandırma (binomial)." }
+        ]
+      },
+      {
+        weekNum: 12, phaseId: 3,
+        title: "12. Hafta: Grafik Problemleri, Mantık & Aşama 3 Değerlendirmesi",
+        desc: "Daire, çizgi ve sütun grafiklerini cebirsel denkleme dökme, 3. Aşama taraması.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Tablo ve Grafik Problemleri (Daire/Sütun)", teacher: "Mert Hoca", target: "20 Paragraf + 30 Grafik Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+grafik+problemleri", channelUrl: directChannels.mertHoca, note: "360 derecelik daire dilimini yüzdeye veya sayıya oranlama." },
+          { day: "Salı", subj: "TYT Türkçe", topic: "Paragraf Hız Denemesi & Karma Dil Bilgisi", teacher: "Rüştü Hoca", target: "40 Türkçe Karma Sorusu", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+paragraf+denemesi", channelUrl: directChannels.rustuHoca, note: "Süre tutarak 40 soruyu 45 dakikanın altında bitirme denemesi." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Rutin Olmayan (Akıl Yürütme) Problemleri", teacher: "Eyüp B.", target: "20 Paragraf + 30 Problem", directUrl: "https://www.youtube.com/results?search_query=eyup+b+rutin+olmayan+problemler", channelUrl: directChannels.eyupB, note: "Şekilli, yönergeli ve Maarif modeli mantık soruları." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Dalgalar 1: Yay ve Su Dalgaları", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+yay+dalgalari", channelUrl: directChannels.vipFizik, note: "Dalga boyu, frekans (v = λ.f) ve yansıma-kırılma kuralları." },
+          { day: "Cuma", subj: "TYT Matematik", topic: "Mantık (Önermeler, Ve/Veya/İse Bağlaçları)", teacher: "Mert Hoca", target: "20 Paragraf + 25 Mantık Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+mantik", channelUrl: directChannels.mertHoca, note: "Doğruluk değerleri ve koşullu önermenin karşıt-tersi." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Paralelkenar ve Eşkenar Dörtgen + Kimya Her Yerde", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 25 Kimya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+paralelkenar", channelUrl: directChannels.gorkemSahin, note: "Karşılıklı kenar eşitliği, köşegen dikliği ve sabun/deterjan kimyası." },
+          { day: "Pazar", subj: "Aşama 3 Taraması", topic: "Omurgalı / Omurgasız Hayvanlar + Problem Taraması", teacher: "Dr. Biyoloji", target: "3. Aşama Problem & Fen Taraması", directUrl: "https://www.youtube.com/results?search_query=dr+biyoloji+omurgalilar", channelUrl: directChannels.drBiyoloji, note: "Balık, kurbağa, sürüngen, kuş, memeli karşılaştırması." }
+        ]
+      },
+      {
+        weekNum: 13, phaseId: 4,
+        title: "13. Hafta: Permütasyon, Kombinasyon, Olasılık & Tarih Başlangıcı",
+        desc: "Sayma kuralları, seçim, sıralama, olasılık ve Tarih temel kavramları.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "Sayma İlkeleri, Faktöriyel ve Permütasyon", teacher: "Mert Hoca", target: "20 Paragraf + 30 PKOB Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+permutasyon", channelUrl: directChannels.mertHoca, note: "Toplama/çarpma yoluyla sayma ve nesneleri sıralama." },
+          { day: "Salı", subj: "TYT Tarih & Türkçe", topic: "Tarih Bilimine Giriş, İlk Çağ Uygarlıkları", teacher: "Sosyal Kampı", target: "25 Tarih + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=tyt+tarih+bilimine+giris", channelUrl: directChannels.rustuHoca, note: "Tarihin yöntemleri ve Mezopotamya/Anadolu uygarlıkları." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Kombinasyon (Seçme Gruplama) ve Binom", teacher: "Eyüp B.", target: "20 Paragraf + 30 Soru", directUrl: "https://www.youtube.com/results?search_query=eyup+b+kombinasyon", channelUrl: directChannels.eyupB, note: "n nesneden r tanesini seçme ve Pascal üçgeni katsayıları." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Dalgalar 2: Ses ve Deprem Dalgaları", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+ses+dalgalari", channelUrl: directChannels.vipFizik, note: "Sesin yüksekliği (frekans), şiddeti (genlik) ve fay hatları." },
+          { day: "Cuma", subj: "TYT Matematik", topic: "Olasılık (Basit ve Koşullu Olasılık)", teacher: "Mert Hoca", target: "20 Paragraf + 25 Olasılık Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+olasilik", channelUrl: directChannels.mertHoca, note: "İstenen durum / Tüm durum oranı ve bağımsız olaylar." },
+          { day: "Cumartesi", subj: "TYT Geometri & Coğrafya", topic: "Dikdörtgen ve Kare + Coğrafya: Harita Bilgisi", teacher: "Kenan Kara & Coğrafya", target: "25 Geo + 25 Coğrafya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+dikdortgen+kare", channelUrl: directChannels.kenanKara, note: "Köşegen dik kesişimleri ve harita ölçekleri / izohipsler." },
+          { day: "Pazar", subj: "TYT Biyoloji & Felsefe", topic: "Genel Biyoloji Tekrarı + Felsefenin Alanı", teacher: "Dr. Biyoloji & Sosyal", target: "30 Biyoloji + 20 Felsefe Sorusu", directUrl: "https://www.youtube.com/results?search_query=tyt+felsefe+konu+anlatimi", channelUrl: directChannels.drBiyoloji, note: "Bilgi felsefesi (Epistemoloji) ve varlık felsefesi akımları." }
+        ]
+      },
+      {
+        weekNum: 14, phaseId: 4,
+        title: "14. Hafta: Veri - İstatistik, Optik 1 & Türk - İslam Tarihi",
+        desc: "Merkezi eğilim ölçüleri (mod, medyan, ortalama), aydınlanma ve İslamiyet öncesi Türk tarihi.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "İstatistik (Aritmetik Ortalama, Mod, Medyan)", teacher: "Mert Hoca", target: "20 Paragraf + 30 İstatistik", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+istatistik", channelUrl: directChannels.mertHoca, note: "Grafik yorumlama ve standart sapma kavramsal mantığı." },
+          { day: "Salı", subj: "TYT Tarih & Türkçe", topic: "İlk Türk Devletleri ve İslam Medeniyeti", teacher: "Sosyal Kampı", target: "25 Tarih + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=tyt+tarih+ilk+turk+devletleri", channelUrl: directChannels.rustuHoca, note: "Kut anlayışı, ikili teşkilat ve Dört Halife dönemi." },
+          { day: "Çarşamba", subj: "TYT Matematik", topic: "Karma Problem ve Sayısal Mantık Denemesi", teacher: "Eyüp B.", target: "30 Seçme Problem Sorusu", directUrl: "https://www.youtube.com/results?search_query=eyup+b+problem+denemesi", channelUrl: directChannels.eyupB, note: "Zaman kısıtlaması altında karma problem çözüm stratejisi." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Optik 1: Aydınlanma, Gölge ve Düzlem Ayna", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+aydinlanma+golge", channelUrl: directChannels.vipFizik, note: "Işık akısı, aydınlanma şiddeti (E=I/d^2) ve tam/yarı gölge." },
+          { day: "Cuma", subj: "TYT Felsefe & Din", topic: "Ahlak Felsefesi + Din Kültürü İnanç Esasları", teacher: "Sosyal Kampı", target: "25 Felsefe + 25 Din Sorusu", directUrl: "https://www.youtube.com/results?search_query=tyt+din+kulturu+konu+anlatimi", channelUrl: directChannels.rustuHoca, note: "İslam'da bilgi kaynakları ve ahlaki sorumluluk kavramları." },
+          { day: "Cumartesi", subj: "TYT Geometri & Coğrafya", topic: "Deltoid, Çemberde Açılar + İklim Bilgisi", teacher: "Kenan Kara & Coğrafya", target: "25 Geo + 25 Coğrafya Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+cemberde+acilar", channelUrl: directChannels.kenanKara, note: "Merkez ve çevre açı ilişkisi, sıcaklık-basınç-rüzgar haritaları." },
+          { day: "Pazar", subj: "Branş Denemeleri", topic: "1x Türkçe Denemesi + 1x Matematik Denemesi", teacher: "Genel Analiz", target: "80 Deneme Sorusu + Detaylı Video Analizi", directUrl: "https://www.youtube.com/results?search_query=tyt+brans+denemesi+cozumu", channelUrl: directChannels.eyupB, note: "Net sayısını ve yanlış yapılan konuların deftere yazılmasını takip et." }
+        ]
+      },
+      {
+        weekNum: 15, phaseId: 4,
+        title: "15. Hafta: Optik 2, Katı Cisimler & Osmanlı / İnkılap Tarihi",
+        desc: "Küresel aynalar, kırılma, prizmalar, prizma/piramit hacimleri ve Milli Mücadele.",
+        days: [
+          { day: "Pazartesi", subj: "TYT Matematik", topic: "TYT Matematik Son Tekrar: Kritik Noktalar", teacher: "Mert Hoca", target: "30 Karma Matematik Sorusu", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+tyt+matematik+genel+tekrar", channelUrl: directChannels.mertHoca, note: "Sınavda en çok düşülen çeldiriciler ve Maarif modeli soru dili." },
+          { day: "Salı", subj: "TYT Tarih & Coğrafya", topic: "Osmanlı Devleti Kuruluş + Türkiye İklimi", teacher: "Sosyal Kampı", target: "25 Tarih + 25 Coğrafya", directUrl: "https://www.youtube.com/results?search_query=tyt+cografya+turkiye+iklimi", channelUrl: directChannels.rustuHoca, note: "Tımar sistemi, divan yapısı ve Türkiye'de yer şekilleri." },
+          { day: "Çarşamba", subj: "TYT Geometri", topic: "Çemberde Uzunluk ve Dairede Alan", teacher: "Kenan Kara", target: "30 Geometri Sorusu", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+dairede+alan", channelUrl: directChannels.kenanKara, note: "Teğet-kiriş özellikleri ve π.r^2 daire dilimi alanı." },
+          { day: "Perşembe", subj: "TYT Fizik & Deneme", topic: "Optik 2: Küresel Aynalar, Kırılma ve Mercekler", teacher: "VIP Fizik", target: "Deneme Analizi + 20 Fizik", directUrl: "https://www.youtube.com/results?search_query=vip+fizik+mercekler", channelUrl: directChannels.vipFizik, note: "Snell yasası, odak noktası ve merceklerde görüntü oluşumu." },
+          { day: "Cuma", subj: "TYT Tarih", topic: "Kurtuluş Savaşı ve İnkılap Tarihi", teacher: "Sosyal Kampı", target: "30 Tarih Sorusu + 20 Paragraf", directUrl: "https://www.youtube.com/results?search_query=tyt+tarih+kurtulus+savasi", channelUrl: directChannels.rustuHoca, note: "Kongreler, Misak-ı Milli ve antlaşmaların sebep-sonuçları." },
+          { day: "Cumartesi", subj: "TYT Geometri & Kimya", topic: "Katı Cisimler (Prizma, Silindir) + Kimya Denemesi", teacher: "Kenan Kara & Görkem Şahin", target: "25 Geo + 1x TYT Kimya Denemesi", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+kati+cisimler", channelUrl: directChannels.gorkemSahin, note: "Hacim (Taban alanı x Yükseklik) ve yüzey alanı modellemeleri." },
+          { day: "Pazar", subj: "Branş Denemeleri", topic: "1x TYT Fen Denemesi + 1x TYT Sosyal Denemesi", teacher: "Genel Analiz", target: "40 Fen/Sosyal Sorusu + Yanlış Analizi", directUrl: "https://www.youtube.com/results?search_query=tyt+fen+denemesi+cozumu", channelUrl: directChannels.drBiyoloji, note: "Fizik, Kimya, Biyoloji ve Sosyal branş denemesi analizi." }
+        ]
+      },
+      {
+        weekNum: 16, phaseId: 4,
+        title: "16. Hafta: Büyük Zirve: Genel Denemeler & Eksik Kapatma",
+        desc: "Kampın büyük finali: Genel deneme provası, 112 günün yanlış defteri taranması ve 12. sınıfa tam hazırlık.",
+        days: [
+          { day: "Pazartesi", subj: "Genel Deneme Provası", topic: "Tam Kapsamlı TYT Genel Denemesi 1", teacher: "Tüm Kadro", target: "120 Soru (Gerçek Sınav Saati: 10:15 - 13:00)", directUrl: "https://www.youtube.com/results?search_query=tyt+genel+deneme+cozumu", channelUrl: directChannels.eyupB, note: "Gerçek sınav süresine (165 dk) birebir uyarak optik formla çöz." },
+          { day: "Salı", subj: "Derinlemesine Analiz", topic: "1. Denemenin Detaylı Video Analizi & Yanlış Defteri", teacher: "Eğitmenler", target: "Bütün Yanlışların Tekrar Çözümü", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+deneme+analizi", channelUrl: directChannels.mertHoca, note: "Hangi konulardan hata çıktığını listele ve formül defterini tara." },
+          { day: "Çarşamba", subj: "Genel Tekrar", topic: "TYT Matematik & Fen En Çok Çıkan Soru Tipleri", teacher: "Eyüp B. & VIP Fizik", target: "40 Karma Soru Çözümü", directUrl: "https://www.youtube.com/results?search_query=tyt+matematik+en+cok+cikan+soru+tipleri", channelUrl: directChannels.vipFizik, note: "ÖSYM ve Maarif havuzunun vazgeçmediği klasik modeller." },
+          { day: "Perşembe", subj: "Genel Deneme Provası", topic: "Tam Kapsamlı TYT Genel Denemesi 2", teacher: "Tüm Kadro", target: "120 Soru (165 Dakika Odaklanma)", directUrl: "https://www.youtube.com/results?search_query=tyt+genel+deneme+cozumu", channelUrl: directChannels.eyupB, note: "Turlama taktiğini uygula: İlk turda yapamadıklarına işaret koyup geç." },
+          { day: "Cuma", subj: "Türkçe & Sosyal Zirvesi", topic: "2. Deneme Analizi + Paragraf ve Sosyal Kavram Taraması", teacher: "Rüştü Hoca", target: "Deneme Yanlışları + 20 Kavram", directUrl: "https://www.youtube.com/results?search_query=rustu+hoca+tyt+turkce+full+tekrar", channelUrl: directChannels.rustuHoca, note: "Türkçe ve Sosyal'deki kavram kelimeleri sözlüğünü tekrar et." },
+          { day: "Cumartesi", subj: "Geometri & Formül Zirvesi", topic: "Geometri ve Fen Formül/Kural Haritaları Tekrarı", teacher: "Kenan Kara & Görkem Şahin", target: "Tüm Formül Kartlarının Gözden Geçirilmesi", directUrl: "https://www.youtube.com/results?search_query=kenan+kara+geometri+full+tekrar", channelUrl: directChannels.kenanKara, note: "Görsel hafıza kartlarıyla üçgenler, optik ve mol kurallarını tara." },
+          { day: "Pazar", subj: "BÜYÜK FİNAL", topic: "16 Haftalık Kamp Başarı Değerlendirmesi & 12. Sınıfa Geçiş", teacher: "Sen ve Başarın!", target: "Net Grafiğini Çıkar + Kutlama", directUrl: "https://www.youtube.com/results?search_query=mert+hoca+yks+motivasyon", channelUrl: directChannels.mertHoca, note: "Tebrikler! 11. sınıfta TYT'yi sıfırdan zirveye bitirdin, 12'ye açık ara önde başlıyorsun!" }
+        ]
+      }
+    ];
+
+    // LocalStorage Anahtarları
+    const STORAGE_KEY_PROGRESS_DIRECT = 'tyt_16week_progress_direct_v8';
+    const STORAGE_KEY_ACTIVE_WEEK = 'tyt_active_week_direct_v8';
+    const STORAGE_KEY_NOTES = 'tyt_notes_direct_v8';
+    const STORAGE_KEY_ALARM_ENABLED = 'tyt_alarm_enabled_v8';
+    const STORAGE_KEY_ALARM_TIME = 'tyt_alarm_time_v8';
+    const STORAGE_KEY_OFF_DAYS = 'tyt_domino_off_days_v8';
+
+    // Durum Değişkenleri
+    let currentWeekNum = parseInt(localStorage.getItem(STORAGE_KEY_ACTIVE_WEEK)) || 1;
+    let progressDatabase = JSON.parse(localStorage.getItem(STORAGE_KEY_PROGRESS_DIRECT)) || {};
+    let notesDatabase = JSON.parse(localStorage.getItem(STORAGE_KEY_NOTES)) || [];
+    let offDaysDatabase = JSON.parse(localStorage.getItem(STORAGE_KEY_OFF_DAYS)) || {};
+    let isAlarmEnabled = localStorage.getItem(STORAGE_KEY_ALARM_ENABLED) !== 'false';
+    let alarmTime = localStorage.getItem(STORAGE_KEY_ALARM_TIME) || '08:00';
+
+    // 112 Günlük Orijinal Müfredat Düz Dizisi (Linear Flat Array)
+    const linearCurriculum = [];
+    weeksDatabase.forEach(w => {
+      w.days.forEach(d => {
+        linearCurriculum.push({
+          origWeek: w.weekNum,
+          origDay: d.day,
+          subj: d.subj,
+          topic: d.topic,
+          teacher: d.teacher,
+          target: d.target,
+          directUrl: d.directUrl,
+          channelUrl: d.channelUrl,
+          note: d.note
+        });
+      });
+    });
+
+    let audioCtx = null;
+    let alarmIntervalId = null;
+    let isAlarmRinging = false;
+    let currentTriggeredVideoUrl = '';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('click', resumeAudioContextOnInteraction, { once: true });
+      document.addEventListener('touchstart', resumeAudioContextOnInteraction, { once: true });
+
+      renderWeekTabs();
+      setupWeekScrollEvents();
+      loadWeek(currentWeekNum);
+      renderNotes();
+      buildFullRoadmapModal();
+      updateMacroStats();
+      initAlarmSystem();
+      buildRoutineScheduleModal('all');
+      renderShiftedModal();
+      generateRandomMotivation();
+    });
+
+    function resumeAudioContextOnInteraction() {
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+    }
+
+    // ================= DOMINO HESAPLAMA MOTORU =================
+    function getLessonForSlot(globalSlotIndex) {
+      if (offDaysDatabase[globalSlotIndex]) {
+        return { isOffDay: true, offInfo: offDaysDatabase[globalSlotIndex] };
+      }
+
+      let shiftsBefore = 0;
+      for (let i = 0; i < globalSlotIndex; i++) {
+        if (offDaysDatabase[i]) shiftsBefore++;
+      }
+
+      const effectiveLessonIndex = globalSlotIndex - shiftsBefore;
+
+      if (effectiveLessonIndex >= 0 && effectiveLessonIndex < linearCurriculum.length) {
+        return {
+          isOffDay: false,
+          lesson: linearCurriculum[effectiveLessonIndex],
+          effectiveIndex: effectiveLessonIndex
+        };
+      } else {
+        return {
+          isOffDay: false,
+          lesson: {
+            subj: "Genel Tekrar & Deneme",
+            topic: "16 Haftalık Kamp Tamamlandı! 12. Sınıfa Geçiş Denemeleri",
+            teacher: "Kendi Tekrarın",
+            target: "Serbest Branş Denemesi",
+            directUrl: "https://www.youtube.com",
+            channelUrl: directChannels.mertHoca,
+            note: "Müfredatın tüm konuları başarıyla tamamlandı. Artık eksik kapatma ve deneme çözme dönemindesin."
+          },
+          effectiveIndex: effectiveLessonIndex
+        };
+      }
+    }
+
+    function markDayShifted(weekNum, dayIndex) {
+      const globalSlotIndex = (weekNum - 1) * 7 + dayIndex;
+      const slotData = getLessonForSlot(globalSlotIndex);
+      const dayName = weeklyFixedSchedule[dayIndex].dayName;
+
+      offDaysDatabase[globalSlotIndex] = {
+        weekNum: weekNum,
+        dayIndex: dayIndex,
+        dayName: dayName,
+        shiftedDate: new Date().toLocaleDateString('tr-TR'),
+        originalTopic: slotData.isOffDay ? "Dinlenme Günü" : slotData.lesson.topic
+      };
+
+      delete progressDatabase[`slot_${globalSlotIndex}`];
+      localStorage.setItem(STORAGE_KEY_OFF_DAYS, JSON.stringify(offDaysDatabase));
+      localStorage.setItem(STORAGE_KEY_PROGRESS_DIRECT, JSON.stringify(progressDatabase));
+
+      loadWeek(currentWeekNum);
+      renderShiftedModal();
+      showToast(`⚡ ${dayName} dinlenme yapıldı! Kalan tüm dersler 1 gün ileri kaydırıldı.`);
+    }
+
+    function undoShiftDay(globalSlotIndex) {
+      if (offDaysDatabase[globalSlotIndex]) {
+        const item = offDaysDatabase[globalSlotIndex];
+        delete offDaysDatabase[globalSlotIndex];
+        localStorage.setItem(STORAGE_KEY_OFF_DAYS, JSON.stringify(offDaysDatabase));
+        loadWeek(currentWeekNum);
+        renderShiftedModal();
+        showToast(`↩️ Hafta ${item.weekNum} ${item.dayName} kaydırması geri alındı.`);
+      }
+    }
+
+    function renderShiftedModal() {
+      const container = document.getElementById('shifted-lessons-container');
+      const badge = document.getElementById('shifted-count-badge');
+      const headerBadge = document.getElementById('shifted-header-badge');
+      
+      const offKeys = Object.keys(offDaysDatabase).map(Number).sort((a,b) => a - b);
+      const count = offKeys.length;
+
+      if (badge) badge.innerText = count;
+
+      if (headerBadge) {
+        if (count > 0) {
+          headerBadge.classList.remove('hidden');
+          headerBadge.innerHTML = `<span>⚡</span> Zincirleme Kaydırma Aktif (${count} Gün)`;
+        } else {
+          headerBadge.classList.add('hidden');
+        }
+      }
+
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (count === 0) {
+        container.innerHTML = `
+          <div class="text-center py-10 text-slate-500 text-xs border border-dashed border-[#1e2c47] rounded-2xl">
+            Henüz kaydırılan bir gün yok. Dışarı çıktığın günlerde karttaki <strong>"🏖️ Dışarı Çıktım"</strong> tuşuna basarsan o gün dinlenme olur ve sonraki tüm dersler domino gibi 1 gün ileri kayar.
+          </div>
+        `;
+        return;
+      }
+
+      offKeys.forEach(slotIdx => {
+        const item = offDaysDatabase[slotIdx];
+        const div = document.createElement('div');
+        div.className = "bg-[#0b101c] border border-amber-500/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs";
+
+        div.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-amber-400">Hafta ${item.weekNum} • ${item.dayName}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">🏖️ Dinlenme Günü</span>
+            </div>
+            <div class="text-white font-medium">Bu güne denk gelen ders sonraki güne ötelendi.</div>
+            <div class="text-[11px] text-slate-400">📅 Tarih: ${item.shiftedDate}</div>
+          </div>
+          <div>
+            <button onclick="undoShiftDay(${slotIdx})" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold transition flex items-center gap-1.5">
+              <span>↩</span> Kaydırmayı Geri Al
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function scrollWeeks(distance) {
+      const container = document.getElementById('week-tabs-container');
+      if (container) {
+        container.scrollBy({ left: distance, behavior: 'smooth' });
+      }
+    }
+
+    function setupWeekScrollEvents() {
+      const container = document.getElementById('week-tabs-container');
+      if (!container) return;
+
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+      });
+
+      container.addEventListener('mouseleave', () => { isDown = false; });
+      container.addEventListener('mouseup', () => { isDown = false; });
+
+      container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        container.scrollLeft = scrollLeft - walk;
+      });
+    }
+
+    function renderWeekTabs() {
+      const container = document.getElementById('week-tabs-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      weeksDatabase.forEach((w) => {
+        const isCurrent = w.weekNum === currentWeekNum;
+        let weekCompletedDays = 0;
+        let weekShiftedDays = 0;
+        for (let d = 0; d < 7; d++) {
+          const globalSlot = (w.weekNum - 1) * 7 + d;
+          if (progressDatabase[`slot_${globalSlot}`]) {
+            weekCompletedDays++;
+          } else if (offDaysDatabase[globalSlot]) {
+            weekShiftedDays++;
+          }
+        }
+
+        const btn = document.createElement('button');
+        btn.id = `week-tab-btn-${w.weekNum}`;
+        btn.onclick = () => loadWeek(w.weekNum);
+        btn.className = `flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 border select-none ${
+          isCurrent
+            ? 'bg-gradient-to-r from-sky-500 to-indigo-600 text-white border-sky-400 shadow-md shadow-sky-500/25 scale-[1.02]'
+            : 'bg-[#131b2e] text-slate-300 border-[#1e2c47] hover:border-slate-600 hover:bg-slate-800'
+        }`;
+
+        let statusBadges = '';
+        if (weekCompletedDays > 0) {
+          statusBadges += `<span class="text-[10px] px-1.5 py-0.5 rounded-full ${isCurrent ? 'bg-black/30 text-emerald-300' : 'bg-emerald-500/20 text-emerald-400 font-bold'}">${weekCompletedDays}/7✓</span>`;
+        }
+        if (weekShiftedDays > 0) {
+          statusBadges += `<span class="text-[10px] px-1.5 py-0.5 rounded-full ${isCurrent ? 'bg-rose-950/60 text-rose-200' : 'bg-rose-500/20 text-rose-300 font-bold'}">${weekShiftedDays}🏖️</span>`;
+        }
+
+        btn.innerHTML = `
+          <span>${w.weekNum}. Hafta</span>
+          ${statusBadges}
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function loadWeek(weekNum) {
+      currentWeekNum = weekNum;
+      localStorage.setItem(STORAGE_KEY_ACTIVE_WEEK, currentWeekNum);
+
+      const weekData = weeksDatabase.find(w => w.weekNum === weekNum) || weeksDatabase[0];
+      const phaseData = macroPhases.find(p => p.id === weekData.phaseId);
+
+      const phaseBadge = document.getElementById('current-phase-badge');
+      if (phaseBadge && phaseData) {
+        phaseBadge.innerText = phaseData.name;
+        phaseBadge.className = `text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-md border ${phaseData.color}`;
+      }
+
+      const activeTitle = document.getElementById('active-week-title');
+      if (activeTitle) activeTitle.innerText = weekData.title;
+
+      const activeDesc = document.getElementById('active-week-desc');
+      if (activeDesc) activeDesc.innerText = weekData.desc;
+
+      const weekLabel = document.getElementById('week-header-label');
+      if (weekLabel) weekLabel.innerHTML = `<span>📅</span> ${weekData.weekNum}. Hafta Günlük Ders Akışı & Spor Entegresi`;
+
+      renderActiveDays(weekData);
+      renderWeekTabs();
+      updateMacroStats();
+
+      const activeBtn = document.getElementById(`week-tab-btn-${weekNum}`);
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+
+    function getLessonFocusBadge(subj, topic) {
+      const s = (subj || '').toLowerCase();
+      const firstTopicWord = (topic || '').split(' ')[0] || '';
+      
+      if (s.includes('matematik') || s.includes('geometri')) {
+        return {
+          badge: `📐 ${subj}: ${firstTopicWord}`,
+          style: 'bg-sky-500/15 text-sky-300 border-sky-500/30'
+        };
+      } else if (s.includes('türkçe')) {
+        return {
+          badge: `📚 ${subj}: Paragraf & Dil`,
+          style: 'bg-purple-500/15 text-purple-300 border-purple-500/30'
+        };
+      } else if (s.includes('fizik')) {
+        return {
+          badge: `⚡ ${subj}: Kavram & Formül`,
+          style: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30'
+        };
+      } else if (s.includes('kimya')) {
+        return {
+          badge: `🧪 ${subj}: Madde & Reaksiyon`,
+          style: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+        };
+      } else if (s.includes('biyoloji')) {
+        return {
+          badge: `🧬 ${subj}: Sistem & Yaşam`,
+          style: 'bg-teal-500/15 text-teal-300 border-teal-500/30'
+        };
+      } else if (s.includes('deneme')) {
+        return {
+          badge: `📝 Genel TYT Prova & Analiz`,
+          style: 'bg-rose-500/15 text-rose-300 border-rose-500/30'
+        };
+      } else {
+        return {
+          badge: `📖 ${subj}`,
+          style: 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30'
+        };
+      }
+    }
+
+    function renderActiveDays(weekData) {
+      const grid = document.getElementById('active-days-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+        const globalSlotIndex = (weekData.weekNum - 1) * 7 + dayIndex;
+        const fixedSched = weeklyFixedSchedule[dayIndex];
+        const slotResult = getLessonForSlot(globalSlotIndex);
+        const storageKey = `slot_${globalSlotIndex}`;
+        const isDone = !!progressDatabase[storageKey];
+
+        const card = document.createElement('div');
+
+        if (slotResult.isOffDay) {
+          card.className = "rounded-2xl p-5 border border-amber-500/50 bg-[#161a29] shadow-lg flex flex-col justify-between space-y-4 ring-1 ring-amber-500/20";
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-1.5 mb-2.5">
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full border bg-amber-500/15 text-amber-300 border-amber-500/30 flex items-center gap-1">
+                  <span>🏖️</span> Sosyal / Dinlenme Günü
+                </span>
+                <button onclick="undoShiftDay(${globalSlotIndex})" class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1">
+                  <span>↩</span> Kaydırmayı Geri Al
+                </button>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-1.5 mb-3">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${fixedSched.fitnessColor}">
+                  ${fixedSched.fitnessBadge}
+                </span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded border bg-amber-500/15 text-amber-400 border-amber-500/30">
+                  🏖️ Ders Kaydırıldı
+                </span>
+              </div>
+
+              <h4 class="text-sm sm:text-base font-bold text-white mb-1.5 leading-snug">
+                <span class="text-amber-400">${fixedSched.dayName}:</span> Dışarı Çıkıldı & Zihin Şarjı
+              </h4>
+
+              <div class="bg-[#0b101c] rounded-xl p-3 border border-amber-500/20 space-y-1.5 my-3 text-xs">
+                <div class="text-amber-300 font-semibold flex items-center gap-1.5">
+                  <span>⚡</span> Domino Kaydırma Aktif:
+                </div>
+                <p class="text-slate-300 text-[11px] leading-relaxed">
+                  Bu günün dersi ve takip eden tüm müfredat tam olarak <strong>1 gün sonraya</strong> ötelendi.
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-[#1e2c47] flex items-center justify-between gap-2">
+              <button onclick="openHourlyModal(${dayIndex})" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[11px] font-bold border border-amber-500/30 transition">
+                <span>⏱️</span> Günün Spor / Rutin Saatleri
+              </button>
+              <button onclick="undoShiftDay(${globalSlotIndex})" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition">
+                Normal Derse Dön
+              </button>
+            </div>
+          `;
+          grid.appendChild(card);
+          continue;
+        }
+
+        const item = slotResult.lesson;
+        const isCascadeShifted = slotResult.effectiveIndex !== globalSlotIndex;
+        const origWeek = item.origWeek || (Math.floor(slotResult.effectiveIndex / 7) + 1);
+        const origDay = item.origDay || weeklyFixedSchedule[slotResult.effectiveIndex % 7]?.dayName || '';
+
+        const dynamicLessonBadge = getLessonFocusBadge(item.subj, item.topic);
+        const rightBadgeText = (!isCascadeShifted && fixedSched.specialBadge) ? fixedSched.specialBadge : dynamicLessonBadge.badge;
+        const rightBadgeStyle = (!isCascadeShifted && fixedSched.specialBadge) ? fixedSched.specialColor : dynamicLessonBadge.style;
+
+        card.className = `rounded-2xl p-5 border transition-all duration-300 flex flex-col justify-between ${
+          isDone 
+            ? 'bg-[#0c1424]/80 border-emerald-500/40 shadow-sm opacity-90' 
+            : isCascadeShifted
+              ? 'bg-[#151d33] border-amber-500/40 hover:border-amber-400/60 shadow-lg ring-1 ring-amber-500/10'
+              : 'bg-[#131b2e] border-[#1e2c47] hover:border-slate-700 hover:bg-[#1a243d] shadow-lg'
+        }`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-1.5 mb-2.5">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full border bg-sky-500/10 text-sky-400 border-sky-500/25">
+                  ${item.subj}
+                </span>
+                ${isCascadeShifted ? `
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-amber-500/20 text-amber-300 border-amber-500/40 flex items-center gap-1">
+                    <span>⚡</span> ${origWeek}. Hafta ${origDay}'den Kaydı
+                  </span>
+                ` : ''}
+              </div>
+              
+              <div class="flex items-center gap-2">
+                <button onclick="markDayShifted(${weekData.weekNum}, ${dayIndex})" class="text-[11px] font-semibold px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-amber-500/20 hover:text-amber-300 text-slate-400 border border-slate-700 transition flex items-center gap-1" title="Dışarı çıktıysan dersi ileri kaydır">
+                  <span>🏖️</span> Dışarı Çıktım
+                </button>
+
+                <label class="flex items-center gap-1.5 cursor-pointer text-xs font-semibold ${isDone ? 'text-emerald-400' : 'text-slate-400'}">
+                  <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleDayStatus('${storageKey}')" class="w-4 h-4 rounded accent-emerald-500 cursor-pointer">
+                  <span>${isDone ? 'Bitti ✓' : 'Hedef'}</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-1.5 mb-3">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${fixedSched.fitnessColor}">
+                ${fixedSched.fitnessBadge}
+              </span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${rightBadgeStyle}">
+                ${rightBadgeText}
+              </span>
+            </div>
+
+            <h4 class="text-sm sm:text-base font-bold text-white mb-1.5 leading-snug">
+              <span class="${isCascadeShifted ? 'text-amber-300' : 'text-sky-400'}">${fixedSched.dayName}:</span> ${item.topic}
+            </h4>
+            
+            <div class="bg-[#0b101c] rounded-xl p-3 border border-[#1e2c47] space-y-1.5 my-3 text-xs">
+              <div class="flex items-center justify-between text-slate-300">
+                <span class="text-slate-400">🎯 TYT Hedefi:</span>
+                <span class="font-medium text-slate-200 text-right">${item.target}</span>
+              </div>
+              <div class="flex items-center justify-between text-slate-300">
+                <span class="text-slate-400">👨‍🏫 Eğitmen:</span>
+                <span class="font-semibold text-sky-400">${item.teacher}</span>
+              </div>
+              <div class="text-[11px] text-slate-400 pt-1.5 border-t border-[#1e2c47]/80 italic">
+                💡 <span>${item.note}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-[#1e2c47] space-y-2">
+            <a href="${item.directUrl}" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-500 hover:to-rose-500 text-white text-xs font-bold shadow-md shadow-red-900/30 transition active:scale-95">
+              <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <span>▶ Doğrudan Dersi Başlat (YouTube)</span>
+            </a>
+
+            <div class="flex items-center gap-2">
+              <button onclick="openHourlyModal(${dayIndex})" class="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[11px] font-bold border border-amber-500/30 transition">
+                <span>⏱️</span> Günün Saatleri
+              </button>
+
+              <button onclick="shareSlotTelegram(${globalSlotIndex})" title="Günün Planını Telegram'a Gönder" class="inline-flex items-center justify-center p-2.5 rounded-xl bg-[#229ED9]/15 hover:bg-[#229ED9]/25 text-[#229ED9] border border-[#229ED9]/30 transition shrink-0">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.18 3.35-1.39 3.73-1.39.08 0 .27.02.39.12.1.08.13.2.14.28-.01.06-.01.19-.03.39z"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      }
+    }
+
+    function toggleDayStatus(storageKey) {
+      progressDatabase[storageKey] = !progressDatabase[storageKey];
+      localStorage.setItem(STORAGE_KEY_PROGRESS_DIRECT, JSON.stringify(progressDatabase));
+      
+      const weekData = weeksDatabase.find(w => w.weekNum === currentWeekNum);
+      renderActiveDays(weekData);
+      renderWeekTabs();
+      updateMacroStats();
+
+      if (progressDatabase[storageKey]) {
+        showToast("🎉 Harika! Günlük hedef tamamlandı!");
+        triggerImmediateMotivation();
+      } else {
+        showToast("Görev tekrar aktif edildi.");
+      }
+    }
+
+    function updateMacroStats() {
+      const totalDaysInCamp = 16 * 7;
+      let totalCompletedDays = 0;
+      let totalShiftedDays = 0;
+
+      for (let slot = 0; slot < totalDaysInCamp; slot++) {
+        if (progressDatabase[`slot_${slot}`]) {
+          totalCompletedDays++;
+        } else if (offDaysDatabase[slot]) {
+          totalShiftedDays++;
+        }
+      }
+
+      const totalRemainingDays = Math.max(0, totalDaysInCamp - (totalCompletedDays + totalShiftedDays));
+      const macroPercent = Math.round((totalCompletedDays / totalDaysInCamp) * 100);
+      const macroShiftedPercent = (totalShiftedDays / totalDaysInCamp) * 100;
+      const macroDonePercent = (totalCompletedDays / totalDaysInCamp) * 100;
+
+      const pEl = document.getElementById('macro-percent');
+      if (pEl) pEl.innerText = `${macroPercent}%`;
+      const mDone = document.getElementById('macro-bar-fill-done');
+      if (mDone) mDone.style.width = `${macroDonePercent}%`;
+      const mShift = document.getElementById('macro-bar-fill-shifted');
+      if (mShift) mShift.style.width = `${macroShiftedPercent}%`;
+
+      const mDoneCount = document.getElementById('macro-done-count');
+      if (mDoneCount) mDoneCount.innerText = `${totalCompletedDays} Gün`;
+      const mShiftCount = document.getElementById('macro-shifted-count');
+      if (mShiftCount) mShiftCount.innerText = `${totalShiftedDays} Gün`;
+      const mRemCount = document.getElementById('macro-remaining-count');
+      if (mRemCount) mRemCount.innerText = `${totalRemainingDays} Gün`;
+
+      let currentWeekCompleted = 0;
+      let currentWeekShifted = 0;
+      for (let d = 0; d < 7; d++) {
+        const slot = (currentWeekNum - 1) * 7 + d;
+        if (progressDatabase[`slot_${slot}`]) {
+          currentWeekCompleted++;
+        } else if (offDaysDatabase[slot]) {
+          currentWeekShifted++;
+        }
+      }
+
+      const currentWeekRemaining = Math.max(0, 7 - (currentWeekCompleted + currentWeekShifted));
+      const weekPercent = Math.round((currentWeekCompleted / 7) * 100);
+      const weekDonePercent = (currentWeekCompleted / 7) * 100;
+      const weekShiftedPercent = (currentWeekShifted / 7) * 100;
+
+      const wPer = document.getElementById('week-percent');
+      if (wPer) wPer.innerText = `${weekPercent}%`;
+      const wDone = document.getElementById('week-bar-fill-done');
+      if (wDone) wDone.style.width = `${weekDonePercent}%`;
+      const wShift = document.getElementById('week-bar-fill-shifted');
+      if (wShift) wShift.style.width = `${weekShiftedPercent}%`;
+
+      const wDet = document.getElementById('week-details-text');
+      if (wDet) wDet.innerText = `${currentWeekCompleted} Bitti • ${currentWeekShifted} Kaydırıldı`;
+      const wRem = document.getElementById('week-remaining-text');
+      if (wRem) wRem.innerText = `${currentWeekRemaining} Gün Kalan`;
+    }
+
+    function resetCurrentWeek() {
+      for (let d = 0; d < 7; d++) {
+        const globalSlot = (currentWeekNum - 1) * 7 + d;
+        delete progressDatabase[`slot_${globalSlot}`];
+        delete offDaysDatabase[globalSlot];
+      }
+      localStorage.setItem(STORAGE_KEY_PROGRESS_DIRECT, JSON.stringify(progressDatabase));
+      localStorage.setItem(STORAGE_KEY_OFF_DAYS, JSON.stringify(offDaysDatabase));
+      loadWeek(currentWeekNum);
+      showToast(`🔄 Hafta ${currentWeekNum} sıfırlandı.`);
+    }
+
+    function shareSlotTelegram(globalSlotIndex) {
+      const dayIndex = globalSlotIndex % 7;
+      const weekNum = Math.floor(globalSlotIndex / 7) + 1;
+      const sched = weeklyFixedSchedule[dayIndex];
+      const slotResult = getLessonForSlot(globalSlotIndex);
+
+      if (slotResult.isOffDay) {
+        const text = `🏖️ *TYT 16 HAFTALIK MAKRO KAMP - DİNLENME GÜNÜ*\n` +
+                     `📅 *${sched.dayName} (Hafta ${weekNum}):* Sosyal Mola\n` +
+                     `🏋️‍♂️ *Spor:* ${sched.fitnessBadge}`;
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`, '_blank');
+        return;
+      }
+
+      const item = slotResult.lesson;
+      const text = `⚡ *TYT 16 HAFTALIK KAMP - HAFTA ${weekNum}*\n` +
+                   `📅 *${sched.dayName}:* ${item.topic}\n` +
+                   `🏋️‍♂️ *Spor:* ${sched.fitnessBadge}\n` +
+                   `📚 *Ders:* ${item.subj} (${item.teacher})\n` +
+                   `🎯 *Hedef:* ${item.target}\n` +
+                   `▶️ *Video:* ${item.directUrl}`;
+
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(item.directUrl)}&text=${encodeURIComponent(text)}`, '_blank');
+      showToast("✈️ Telegram'a aktarılıyor...");
+    }
+
+    function shareActiveWeekTelegram() {
+      const week = weeksDatabase.find(w => w.weekNum === currentWeekNum);
+      let text = `📌 *TYT 16 HAFTALIK KAMP - ${week.title.toUpperCase()}*\n\n`;
+
+      for (let d = 0; d < 7; d++) {
+        const globalSlot = (currentWeekNum - 1) * 7 + d;
+        const sched = weeklyFixedSchedule[d];
+        const slotResult = getLessonForSlot(globalSlot);
+
+        if (slotResult.isOffDay) {
+          text += `▫️ *${sched.dayName}:* 🏖️ Dinlenme Günü\n\n`;
+        } else {
+          const l = slotResult.lesson;
+          text += `▫️ *${sched.dayName} (${l.subj}):* ${l.topic}\n   🎯 ${l.target} (${l.teacher})\n\n`;
+        }
+      }
+
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`, '_blank');
+      showToast("✈️ Haftalık plan Telegram'a aktarılıyor...");
+    }
+
+    function getTodayLessonInfo() {
+      const dayIndexMap = [6, 0, 1, 2, 3, 4, 5];
+      const todayDayIdx = dayIndexMap[new Date().getDay()];
+      const globalSlot = (currentWeekNum - 1) * 7 + todayDayIdx;
+      const slotResult = getLessonForSlot(globalSlot);
+
+      if (slotResult.isOffDay) {
+        return {
+          lesson: {
+            subj: "Dinlenme Günü",
+            topic: "Dışarı Çıkıldı / Zihin Şarjı",
+            target: "Dinlen ve motive ol",
+            teacher: "Kendin",
+            directUrl: "https://www.youtube.com"
+          },
+          schedule: weeklyFixedSchedule[todayDayIdx]
+        };
+      }
+
+      return {
+        lesson: slotResult.lesson,
+        schedule: weeklyFixedSchedule[todayDayIdx] || weeklyFixedSchedule[0]
+      };
+    }
+
+    function triggerAlarmEvent() {
+      const { lesson, schedule } = getTodayLessonInfo();
+      currentTriggeredVideoUrl = lesson.directUrl;
+
+      const sub = document.getElementById('alarm-modal-subject');
+      if (sub) sub.innerText = `${lesson.subj}: ${lesson.topic}`;
+      const tar = document.getElementById('alarm-modal-target');
+      if (tar) tar.innerText = `🎯 Hedef: ${lesson.target} • Eğitmen: ${lesson.teacher}`;
+      const note = document.getElementById('alarm-modal-note');
+      if (note) note.innerText = `Rutin: ${schedule.fitnessBadge} | ${schedule.specialBadge || 'Serbest Etüt'}`;
+
+      const modal = document.getElementById('alarm-trigger-modal');
+      if (modal) modal.classList.remove('hidden');
+      startContinuousAlarm();
+    }
+
+    function stopAlarmAndGoLesson() {
+      stopContinuousAlarm();
+      toggleModal('alarm-trigger-modal');
+      showToast("🚀 Derse geçiliyor, bol verimler!");
+      if (currentTriggeredVideoUrl) {
+        window.open(currentTriggeredVideoUrl, '_blank');
+      }
+    }
+
+    function snoozeAlarm(mins) {
+      stopContinuousAlarm();
+      toggleModal('alarm-trigger-modal');
+      showToast(`💤 Alarm ${mins} dakika ertelendi.`);
+      setTimeout(triggerAlarmEvent, mins * 60 * 1000);
+    }
+
+    function initAlarmSystem() {
+      const timeInput = document.getElementById('alarm-time-input');
+      const toggleInput = document.getElementById('alarm-toggle-input');
+      const navText = document.getElementById('nav-alarm-text');
+      const pill = document.getElementById('alarm-status-pill');
+
+      if (timeInput) timeInput.value = alarmTime;
+      if (toggleInput) toggleInput.checked = isAlarmEnabled;
+      if (navText) navText.innerText = alarmTime;
+      if (pill) {
+        pill.innerHTML = isAlarmEnabled ? `<span>🔔</span> Alarm Aktif: ${alarmTime}` : `<span>🔕</span> Alarm Kapalı`;
+      }
+
+      setInterval(() => {
+        if (!isAlarmEnabled || isAlarmRinging) return;
+        const now = new Date();
+        const currentClock = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        if (currentClock === alarmTime && now.getSeconds() < 10) {
+          triggerAlarmEvent();
+        }
+      }, 10000);
+    }
+
+    function toggleAlarmSetting(enabled) {
+      isAlarmEnabled = enabled;
+      localStorage.setItem(STORAGE_KEY_ALARM_ENABLED, isAlarmEnabled);
+      const pill = document.getElementById('alarm-status-pill');
+      if (pill) {
+        pill.innerHTML = isAlarmEnabled ? `<span>🔔</span> Alarm Aktif: ${alarmTime}` : `<span>🔕</span> Alarm Kapalı`;
+      }
+      showToast(isAlarmEnabled ? "⏰ Hatırlatıcı açıldı." : "🔕 Hatırlatıcı kapatıldı.");
+    }
+
+    function saveAlarmTime(val) {
+      if (!val) return;
+      alarmTime = val;
+      localStorage.setItem(STORAGE_KEY_ALARM_TIME, alarmTime);
+      const navText = document.getElementById('nav-alarm-text');
+      const pill = document.getElementById('alarm-status-pill');
+      if (navText) navText.innerText = alarmTime;
+      if (pill && isAlarmEnabled) {
+        pill.innerHTML = `<span>🔔</span> Alarm Aktif: ${alarmTime}`;
+      }
+      showToast(`⏰ Alarm saati güncellendi: ${alarmTime}`);
+    }
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) {
+          audioCtx = new AudioCtxClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function playBeep(freq = 650, duration = 0.15) {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (err) {}
+    }
+
+    function startContinuousAlarm() {
+      if (isAlarmRinging) return;
+      isAlarmRinging = true;
+      alarmIntervalId = setInterval(() => {
+        playBeep(784, 0.12);
+        setTimeout(() => playBeep(988, 0.15), 140);
+      }, 700);
+    }
+
+    function stopContinuousAlarm() {
+      isAlarmRinging = false;
+      if (alarmIntervalId) {
+        clearInterval(alarmIntervalId);
+        alarmIntervalId = null;
+      }
+    }
+
+    function testAlarmRing() {
+      playBeep(784, 0.18);
+      setTimeout(() => playBeep(988, 0.22), 200);
+      showToast("🔔 Zil sesi başarıyla test edildi.");
+    }
+
+    function requestNotificationPermission() {
+      if (!("Notification" in window)) {
+        showToast("Tarayıcınız bildirim desteklemiyor.");
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          showToast("✅ Bildirim izinleri aktif!");
+        } else {
+          showToast("⚠️ Bildirim izni verilmedi.");
+        }
+      });
+    }
+
+    function triggerImmediateMotivation() {
+      const quote = motivationQuotes[Math.floor(Math.random() * motivationQuotes.length)];
+      const liveText = document.getElementById('live-motivation-text');
+      if (liveText) liveText.innerText = `"${quote}"`;
+      showToast("🔥 Teşvik ateşlendi! Hedefe odaklan!");
+    }
+
+    function generateRandomMotivation() {
+      const quote = motivationQuotes[Math.floor(Math.random() * motivationQuotes.length)];
+      const liveText = document.getElementById('live-motivation-text');
+      if (liveText) liveText.innerText = `"${quote}"`;
+    }
+
+    function openHourlyModal(preSelectDay = 'all') {
+      buildRoutineScheduleModal(preSelectDay);
+      toggleModal('hourly-routine-modal');
+    }
+
+    function filterRoutineDay(filter) {
+      const btns = document.querySelectorAll('.routine-filter-btn');
+      btns.forEach((b, idx) => {
+        const isMatch = (filter === 'all' && idx === 7) || (filter === idx);
+        if (isMatch) {
+          b.className = "routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30";
+        } else {
+          b.className = "routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700";
+        }
+      });
+      buildRoutineScheduleModal(filter);
+    }
+
+    function buildRoutineScheduleModal(filter = 'all') {
+      const container = document.getElementById('routine-schedule-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const targetSchedules = (filter === 'all')
+        ? weeklyFixedSchedule
+        : weeklyFixedSchedule.filter(s => s.dayIndex === filter);
+
+      targetSchedules.forEach(sched => {
+        const blockWrapper = document.createElement('div');
+        blockWrapper.className = "bg-[#0b101c] border border-[#1e2c47] rounded-2xl p-4 space-y-3";
+
+        let blocksHtml = sched.routineBlocks.map(b => `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 rounded-xl bg-slate-900/70 border ${b.color} gap-2 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-slate-400 font-semibold shrink-0 text-[11px]">${b.time}</span>
+              <span class="text-white font-medium">${b.title}</span>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded-md border ${b.color} self-start sm:self-auto font-semibold">
+              ${b.tag}
+            </span>
+          </div>
+        `).join('');
+
+        blockWrapper.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1e2c47]/60">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-bold text-white">${sched.dayName}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded border ${sched.fitnessColor} font-semibold">${sched.fitnessBadge}</span>
+            </div>
+            ${sched.specialBadge ? `<span class="text-[10px] px-2 py-0.5 rounded border ${sched.specialColor} font-semibold">${sched.specialBadge}</span>` : ''}
+          </div>
+          <div class="space-y-1.5">
+            ${blocksHtml}
+          </div>
+        `;
+        container.appendChild(blockWrapper);
+      });
+    }
+
+    function shareHourlyScheduleTelegram() {
+      let text = `🏋️‍♂️ *11. SINIF SPOR & TYT SAATLİK RUTİN*\n\n`;
+      weeklyFixedSchedule.forEach(s => {
+        text += `📌 *${s.dayName}* (${s.fitnessBadge}):\n`;
+        s.routineBlocks.forEach(b => {
+          text += `  • ${b.time} -> ${b.title}\n`;
+        });
+        text += `\n`;
+      });
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`, '_blank');
+      showToast("✈️ Saatlik rutin Telegram'a aktarılıyor...");
+    }
+
+    function buildFullRoadmapModal() {
+      const container = document.getElementById('roadmap-table-content');
+      if (!container) return;
+      container.innerHTML = '';
+
+      macroPhases.forEach(phase => {
+        const phaseDiv = document.createElement('div');
+        phaseDiv.className = "bg-[#0b101c] border border-[#1e2c47] rounded-2xl p-4 space-y-3";
+
+        let weeksHtml = '';
+        phase.weeks.forEach(wNum => {
+          const wData = weeksDatabase.find(w => w.weekNum === wNum);
+          if (!wData) return;
+          weeksHtml += `
+            <div onclick="selectWeekFromRoadmap(${wNum})" class="p-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-[#1e2c47] hover:border-sky-500/40 cursor-pointer transition flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <div class="font-bold text-slate-200 text-xs">${wData.title}</div>
+                <div class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">${wData.desc}</div>
+              </div>
+              <span class="text-[10px] text-sky-400 font-semibold px-2 py-1 rounded-lg bg-sky-500/10 border border-sky-500/20 shrink-0 self-start sm:self-auto">
+                Bu Haftaya Git ➔
+              </span>
+            </div>
+          `;
+        });
+
+        phaseDiv.innerHTML = `
+          <div class="flex items-center gap-2 pb-2 border-b border-[#1e2c47]/70">
+            <span class="text-[11px] uppercase tracking-wider font-extrabold px-2.5 py-0.5 rounded-md border ${phase.color}">
+              ${phase.name}
+            </span>
+          </div>
+          <div class="space-y-2">
+            ${weeksHtml}
+          </div>
+        `;
+        container.appendChild(phaseDiv);
+      });
+    }
+
+    function selectWeekFromRoadmap(weekNum) {
+      toggleModal('full-roadmap-modal');
+      loadWeek(weekNum);
+      showToast(`🗓️ Hafta ${weekNum} görüntülendi.`);
+    }
+
+    function renderNotes() {
+      const container = document.getElementById('notes-container');
+      const countEl = document.getElementById('saved-notes-count');
+      if (!container || !countEl) return;
+      container.innerHTML = '';
+      countEl.innerText = `${notesDatabase.length} Not`;
+
+      if (notesDatabase.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-500 text-xs border border-dashed border-[#1e2c47] rounded-xl">
+            Henüz eklenmiş analiz yok. Denemelerde takıldığın soruları buraya kaydet.
+          </div>
+        `;
+        return;
+      }
+
+      notesDatabase.slice().reverse().forEach((note, index) => {
+        const actualIdx = notesDatabase.length - 1 - index;
+        const div = document.createElement('div');
+        div.className = "bg-[#0b101c] border border-[#1e2c47] rounded-xl p-3.5 flex flex-col justify-between gap-2 text-xs";
+        div.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start gap-2 mb-1">
+              <span class="font-bold text-sky-400">${escapeHtml(note.topic)}</span>
+              <span class="text-[10px] text-slate-500">${note.date}</span>
+            </div>
+            <p class="text-slate-300 leading-relaxed">${escapeHtml(note.body)}</p>
+          </div>
+          <div class="flex justify-between items-center pt-2 border-t border-[#1e2c47]/70">
+            <button onclick="shareSingleNoteTelegram(${actualIdx})" class="text-[#229ED9] hover:underline text-[11px] flex items-center gap-1 font-medium">
+              <span>✈️</span> Telegram'a Gönder
+            </button>
+            <button onclick="deleteNote(${actualIdx})" class="text-rose-400 hover:text-rose-300 text-[11px]">Sil</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function addMistakeNote() {
+      const tInput = document.getElementById('note-topic-input');
+      const bInput = document.getElementById('note-body-input');
+      const topic = tInput.value.trim();
+      const body = bInput.value.trim();
+
+      if (!topic || !body) {
+        showToast("⚠️ Lütfen konu başlığı ve açıklama gir.");
+        return;
+      }
+
+      const now = new Date();
+      const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth()+1).toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      notesDatabase.push({ topic, body, date: dateStr });
+      localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(notesDatabase));
+
+      tInput.value = '';
+      bInput.value = '';
+      renderNotes();
+      showToast("📝 Yanlış defterine eklendi!");
+    }
+
+    function deleteNote(index) {
+      notesDatabase.splice(index, 1);
+      localStorage.setItem(STORAGE_KEY_NOTES, JSON.stringify(notesDatabase));
+      renderNotes();
+      showToast("Not silindi.");
+    }
+
+    function shareSingleNoteTelegram(idx) {
+      const n = notesDatabase[idx];
+      if (!n) return;
+      const text = `📝 *TYT YANLIŞ DEFTERİ*\n\n📌 *Konu:* ${n.topic}\n💡 *Açıklama:* ${n.body}\n📅 *Tarih:* ${n.date}`;
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function sendNotesToTelegram() {
+      if (notesDatabase.length === 0) {
+        showToast("⚠️ Gönderilecek not bulunmuyor.");
+        return;
+      }
+      let full = `📝 *TYT YANLIŞ DEFTERİ - TÜM ANALİZLERİM*\n\n`;
+      notesDatabase.forEach((n, i) => {
+        full += `${i+1}) *${n.topic}* (${n.date}):\n${n.body}\n\n`;
+      });
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(full)}`, '_blank');
+      showToast("✈️ Notlar Telegram'a aktarılıyor...");
+    }
+
+    function toggleModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.toggle('hidden');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      if (!toast || !toastMsg) return;
+      toastMsg.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const d = document.createElement('div');
+      d.innerText = text;
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>
