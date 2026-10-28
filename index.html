@@ -1,169 +1,920 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="dark h-full">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Net Defterim &amp; TYT Kampı — YKS Çalışma Defteri ve Kişisel Kamp Programı</title>
-  <meta name="description" content="Çözemediğin soruları biriktir, aralıklı tekrarla kalıcı öğren, deneme netlerini takip et ve kendi okul-spor düzenine göre Maarif TYT kampını yönet." />
-  <meta name="theme-color" content="#0f2b29" />
-  <link rel="icon" href="./public/favicon.png" type="image/png" />
-  <link rel="apple-touch-icon" href="./public/apple-touch-icon.png" />
-  <link rel="manifest" href="./manifest.json" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./css/net-defterim.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Maarif TYT & Spor Kişisel Kamp Uygulaması</title>
+
+  <meta name="theme-color" content="#0a0f1d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TYT Kampı">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" href="public/favicon.png" type="image/png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/net-defterim.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          colors: {
+            canvas: '#0a0f1d',
+            cardbg: '#131b2e',
+            cardhover: '#1a243d',
+            borderclr: '#1e2c47'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #0a0f1d !important;
+      color: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0f1d; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .alarm-ring {
+      animation: pulseRing 1.4s ease-in-out infinite;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-[#0a0f1d] text-slate-100 min-h-screen flex flex-col antialiased relative">
 
-  <!-- OTURUM AÇMA & KAYIT EKRANI (auth-modal / welcome-shell) -->
-  <div id="auth-modal" class="welcome-shell" style="display: none;">
-    <div class="welcome-card">
-      <div class="welcome-brand">
-        <img src="./public/logo-white.png" alt="Net Defterim" class="welcome-logo" />
-        <p class="eyebrow">YKS · LGS · Maarif TYT Kampı &amp; Kişisel Çalışma Defteri</p>
-      </div>
-      <h1>Yanlışlarını <em>net’e</em>, zamanını <em>programa</em> dönüştür.</h1>
-      <p>
-        Çözemediğin soruları fotoğrafla veya metinle kaydet, <strong>1-3-7-14-30-60 gün</strong> aralıklı tekrarla öğren,
-        okul ve spor saatlerine göre çakışmasız <strong>Maarif TYT Kamp Programını</strong> yönet.
-      </p>
+  <div id="tyt-kampi-view" class="flex-1 flex flex-col">
+  <!-- Sağ Alt Hızlı Erişim Butonları -->
+  <div class="fixed bottom-5 right-5 z-40 flex flex-col gap-2.5 items-end">
+    <!-- Net Defterim Tek Tuşla Geçiş Butonu -->
+    <button onclick="switchAppMode('net-defterim')" id="floating-net-defterim-btn" class="group flex items-center gap-2.5 bg-gradient-to-r from-[#0f2b29] via-[#134e4a] to-[#2fb597] hover:from-[#134e4a] hover:to-[#3fc6a7] text-white font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-2xl shadow-teal-500/30 border border-[#5fd0b6]/50 transition-all transform active:scale-95 hover:scale-105">
+      <span>📓</span>
+      <span class="tracking-wide">Net Defterim'e Geç (<span id="floating-nd-count">0</span> Soru)</span>
+    </button>
 
-      <div id="saved-accounts-container" class="saved-accounts-box" style="display: none;">
-        <div style="font-size: 0.76rem; color: var(--ink-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
-          Bu Cihazdaki Kayıtlı Hesaplar (Hızlı Geçiş)
+    <!-- Ertelenen Dersler Kuyruğu Butonu -->
+    <button onclick="toggleModal('shifted-lessons-modal')" id="shifted-queue-btn" class="group flex items-center gap-2 bg-gradient-to-r from-amber-600 to-rose-600 hover:from-amber-500 hover:to-rose-500 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-xl shadow-rose-500/25 border border-rose-300/30 transition-all transform active:scale-95 hover:scale-105">
+      <span>🏖️</span>
+      <span class="tracking-wide">Zincirleme Kaydırma (<span id="shifted-count-badge">0</span> Gün)</span>
+    </button>
+
+    <!-- Kişisel Birleşik Saatlik Rutin Butonu -->
+    <button onclick="openHourlyModal()" class="group flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-xl shadow-amber-500/25 border border-amber-300/30 transition-all transform active:scale-95 hover:scale-105">
+      <span>⏱️</span>
+      <span class="tracking-wide">Birleşik Saatlik Programım</span>
+    </button>
+
+    <!-- Makro Harita Butonu -->
+    <button onclick="toggleModal('full-roadmap-modal')" class="group flex items-center gap-2 bg-gradient-to-r from-sky-500 via-indigo-600 to-purple-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-full shadow-2xl shadow-sky-500/30 border border-sky-300/30 transition-all transform active:scale-95 hover:scale-105">
+      <span>🗺️</span>
+      <span class="tracking-wide">Kişisel Kamp Haritası</span>
+    </button>
+  </div>
+
+  <!-- Üst Menü / Navbar -->
+  <header class="sticky top-0 z-30 bg-[#0a0f1d]/95 backdrop-blur-md border-b border-[#1e2c47]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-600 to-purple-600 flex items-center justify-center font-black text-lg text-white shadow-lg shadow-sky-500/20 shrink-0">
+          ⚡
         </div>
-        <div id="saved-accounts-list"></div>
+        <div class="truncate">
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-base font-bold text-white tracking-tight truncate">Maarif TYT & Spor Kişisel Kamp</h1>
+            <span id="nav-tempo-pill" class="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 font-bold">⚡ Dengeli Kamp (16 Hafta)</span>
+          </div>
+          <p class="text-[11px] text-slate-400 truncate">Kişiye Özel Düzen &bull; Popüler Spor Sistemleri &bull; Çakışmasız Maarif Motoru</p>
+        </div>
       </div>
 
-      <div class="auth-tabs">
-        <button type="button" id="tab-login-btn" class="auth-tab active" onclick="window.appController.switchAuthTab('login')">
-          Oturum Aç
+      <div class="flex flex-wrap items-center gap-2 shrink-0">
+        <!-- Net Defterim'e Tek Tuşla Geçiş Butonu -->
+        <button onclick="switchAppMode('net-defterim')" id="navbar-net-defterim-btn" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#0f2b29] to-[#1f5752] hover:from-[#143935] hover:to-[#2fb597] text-[#8fe0c9] hover:text-white text-xs font-extrabold border border-[#5fd0b6]/40 transition shadow-md shadow-teal-950/50" title="Net Defterim Çalışma Alanına Geç">
+          <span>📓</span>
+          <span>Net Defterim</span>
+          <span id="nav-nd-due-badge" class="px-1.5 py-0.5 rounded-full bg-[#5fd0b6] text-[#0f2b29] text-[10px] font-black">Aç</span>
         </button>
-        <button type="button" id="tab-register-btn" class="auth-tab" onclick="window.appController.switchAuthTab('register')">
-          Yeni Hesap Oluştur
+
+        <!-- Kişisel Düzeni & Sporu Güncelle Butonu -->
+        <button onclick="openOnboardingWizard(false)" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 text-xs font-bold border border-sky-500/30 transition shadow-sm" title="Sabit Bloklarını, Sporunu ve Yoğunluğunu Düzenle">
+          <span>⚙️</span> <span>Düzenimi & Sporumu Kur</span>
+        </button>
+
+        <!-- Birleşik Saatlik Plan Tuşu -->
+        <button onclick="openHourlyModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-orange-500/15 hover:bg-orange-500/25 text-orange-400 text-xs font-semibold border border-orange-500/30 transition shadow-sm">
+          <span>🏋️‍♂️</span> <span class="hidden md:inline">Saatlik</span> Rutin
+        </button>
+
+        <!-- Dahili Alarm Ayar Butonu -->
+        <button onclick="toggleModal('alarm-settings-modal')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-400 text-xs font-semibold border border-amber-500/30 transition shadow-sm">
+          <span id="nav-alarm-icon">⏰</span>
+          <span id="nav-alarm-text">08:00</span>
+        </button>
+
+        <!-- Bulut Ayarı Butonu -->
+        <button onclick="openCloudSettingsModal()" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-300 text-xs font-semibold border border-indigo-500/30 transition" title="Supabase Bulut Senkronizasyonu">
+          <span>☁️</span> <span class="hidden lg:inline">Bulut</span>
+        </button>
+
+        <!-- Aktif Kullanıcı Rozeti & Çıkış -->
+        <div class="flex items-center gap-1.5 pl-2 border-l border-[#1e2c47]">
+          <div id="nav-user-avatar" class="w-7 h-7 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow">
+            K
+          </div>
+          <span id="nav-user-name" class="text-xs font-bold text-slate-200 hidden sm:inline max-w-[110px] truncate">Kullanıcı</span>
+          <button onclick="handleLogout()" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 text-[11px] font-semibold transition" title="Hesaptan Çıkış Yap">
+            Çıkış
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Canlı Motivasyon Bandı -->
+  <section class="bg-gradient-to-r from-purple-900/40 via-indigo-900/30 to-sky-900/40 border-b border-[#1e2c47]/70 px-4 py-2">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="flex h-2 w-2 relative shrink-0">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+        </span>
+        <span class="font-bold text-purple-300 shrink-0">Günün Teşviki:</span>
+        <span id="live-motivation-text" class="text-slate-200 truncate italic">"Kendi programına sadık kaldığın her gün seni hedefine yaklaştırır!"</span>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <button onclick="triggerImmediateMotivation()" class="text-purple-300 hover:text-white font-semibold text-[11px]">
+          🔥 Teşvik Ateşle
+        </button>
+        <button onclick="shareActiveWeekTelegram()" class="text-[#229ED9] hover:underline font-semibold text-[11px]">
+          ✈️ Haftayı Telegram'a At
         </button>
       </div>
+    </div>
+  </section>
 
-      <div id="auth-error-msg" style="display: none; margin-bottom: 12px; padding: 10px 12px; border-radius: 10px; background: var(--rose-soft); color: var(--rose); font-size: 0.84rem; font-weight: 600;"></div>
+  <!-- Ana Gövde -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-5 space-y-6">
 
-      <!-- Giriş Formu -->
-      <form id="login-form" class="welcome-form" onsubmit="window.appController.handleLogin(event)">
-        <label>
-          <span>E-posta adresin</span>
-          <input type="email" id="login-email" required placeholder="ornek@ogrenci.com" />
-        </label>
-        <label>
-          <span>Şifren</span>
-          <input type="password" id="login-password" required placeholder="••••••" />
-        </label>
-        <button type="submit" class="btn-primary full">Defterimi ve Kampımı Aç</button>
-      </form>
+    <!-- Makro İlerleme ve Haftalık Bilgi Paneli -->
+    <section class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <!-- Kayıt Formu -->
-      <form id="register-form" class="welcome-form" style="display: none;" onsubmit="window.appController.handleRegister(event)">
-        <label>
-          <span>Adın ve Soyadın</span>
-          <input type="text" id="reg-name" required placeholder="Örn. Yusuf Kaya" />
-        </label>
-        <div class="welcome-row">
-          <label>
-            <span>Sınıfın</span>
-            <select id="reg-grade">
-              <option value="9. Sınıf">9. Sınıf</option>
-              <option value="10. Sınıf">10. Sınıf</option>
-              <option value="11. Sınıf">11. Sınıf</option>
-              <option value="12. Sınıf" selected>12. Sınıf</option>
-              <option value="Mezun">Mezun</option>
-            </select>
-          </label>
-          <label>
-            <span>Hedef sınav</span>
-            <select id="reg-target">
-              <option value="TYT + AYT">TYT + AYT</option>
-              <option value="TYT">Sadece TYT</option>
-              <option value="AYT">Sadece AYT</option>
-              <option value="YDT">YDT (Dil)</option>
-              <option value="LGS">LGS</option>
-            </select>
-          </label>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-center relative z-10">
+        <div class="lg:col-span-2 space-y-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="current-phase-badge" class="text-[11px] uppercase tracking-wider font-extrabold text-sky-400 bg-sky-500/10 border border-sky-500/25 px-2.5 py-0.5 rounded-md">
+              Aşama 1: Temel İnşa & Sayılar
+            </span>
+            <span id="header-sport-pill" class="bg-orange-500/10 text-orange-400 border border-orange-500/25 text-[11px] px-2.5 py-0.5 rounded-md font-semibold flex items-center gap-1">
+              <span>🏋️‍♂️ Kişisel Spor Programı</span>
+            </span>
+            <span id="alarm-status-pill" class="bg-amber-500/15 text-amber-400 border border-amber-500/30 text-[11px] px-2.5 py-0.5 rounded-md font-semibold flex items-center gap-1">
+              <span>🔔</span> Alarm Aktif: 08:00
+            </span>
+            <span id="shifted-header-badge" class="hidden bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[11px] px-2.5 py-0.5 rounded-md font-semibold flex items-center gap-1">
+              <span>⚡</span> Zincirleme Kaydırma Aktif (0 Gün)
+            </span>
+          </div>
+          <h2 id="active-week-title" class="text-xl sm:text-2xl font-black text-white tracking-tight">
+            1. Hafta: Temel Kavramlar & Anlam Bilgisi
+          </h2>
+          <p id="active-week-desc" class="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-2xl">
+            Sayı kümelerini kavrama, okuduğunu anlama hızını artırma ve temel fen kavramlarını zihinde somutlaştırma dönemi.
+          </p>
         </div>
-        <div class="welcome-row">
-          <label>
-            <span>E-posta adresin</span>
-            <input type="email" id="reg-email" required placeholder="ornek@ogrenci.com" />
-          </label>
-          <label>
-            <span>Şifre belirle</span>
-            <input type="password" id="reg-password" required placeholder="En az 3 karakter" />
-          </label>
-        </div>
-        <button type="submit" class="btn-primary full">Hesabımı Oluştur ve Başla</button>
-      </form>
 
-      <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; font-size: 0.76rem; color: var(--ink-muted);">
-        <span>☁️ Supabase Bulut Senkronizasyonu Aktif</span>
-        <span>MEB Maarif Modeli Uyumlu</span>
+        <div class="bg-[#0b101c] border border-[#1e2c47] rounded-xl p-4 sm:p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex justify-between items-end mb-1.5 text-xs">
+              <span id="macro-total-days-label" class="text-slate-400 font-medium">Genel TYT Başarısı:</span>
+              <span id="macro-percent" class="font-black text-emerald-400 text-sm">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden flex">
+              <div id="macro-bar-fill-done" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500" style="width: 0%"></div>
+              <div id="macro-bar-fill-shifted" class="h-full bg-gradient-to-r from-rose-500 to-red-600 transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="flex flex-wrap justify-between items-center mt-2 text-[11px] gap-y-1">
+              <span class="text-emerald-400 font-semibold flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
+                <span id="macro-done-count">0</span> Tamamlandı
+              </span>
+              <span class="text-rose-400 font-semibold flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>
+                <span id="macro-shifted-count">0</span> Kaydırıldı
+              </span>
+              <span class="text-slate-500 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-slate-700 inline-block"></span>
+                <span id="macro-remaining-count">112</span> Kalan
+              </span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-[#1e2c47]/70">
+            <div class="flex justify-between items-end mb-1 text-xs">
+              <span class="text-slate-400 font-medium">Bu Haftaki Durum:</span>
+              <span id="week-percent" class="font-bold text-emerald-400">0%</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden flex">
+              <div id="week-bar-fill-done" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
+              <div id="week-bar-fill-shifted" class="h-full bg-rose-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between items-center mt-1.5 text-[10px] text-slate-400">
+              <span id="week-details-text">0 Bitti • 0 Kaydırıldı</span>
+              <span id="week-remaining-text">7 Gün Kalan</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kamp Haftası Seçici Butonlar -->
+    <section class="space-y-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs sm:text-sm font-bold text-slate-300 flex items-center gap-1.5">
+          <span>🗓️</span> <span id="week-selector-range-label">Kamp Haftasını Seç:</span>
+        </h3>
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1">
+            <button onclick="scrollWeeks(-240)" title="Geri Kaydır" class="w-7 h-7 rounded-lg bg-[#131b2e] hover:bg-slate-700 border border-[#1e2c47] text-slate-300 flex items-center justify-center text-xs font-bold transition active:scale-90">
+              ◀
+            </button>
+            <button onclick="scrollWeeks(240)" title="İleri Kaydır" class="w-7 h-7 rounded-lg bg-[#131b2e] hover:bg-slate-700 border border-[#1e2c47] text-slate-300 flex items-center justify-center text-xs font-bold transition active:scale-90">
+              ▶
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <div id="week-tabs-container" class="flex gap-2 overflow-x-auto pb-2.5 pt-0.5 px-0.5 scroll-smooth select-none" style="scrollbar-width: thin; scrollbar-color: #334155 #0a0f1d;"></div>
+      </div>
+    </section>
+
+    <!-- Seçili Haftanın 7 Günlük Kartları -->
+    <section class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 id="week-header-label" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <span>📅</span> 1. Hafta Kişisel Ders & Spor Birleşik Akışı
+          </h3>
+          <p class="text-xs text-slate-400">Kendi girdiğin sabit saatler ve spor programına göre Maarif TYT derslerin boş saatlerine otomatik yerleştirildi.</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="openOnboardingWizard(false)" class="px-3.5 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+            <span>⚙️</span> Düzenimi / Yoğunluğumu Değiştir
+          </button>
+          <button onclick="openHourlyModal()" class="px-3.5 py-1.5 rounded-xl bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+            <span>⏱️</span> Haftalık Birleşik Saatleri Aç
+          </button>
+          <button onclick="resetCurrentWeek()" class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold transition">
+            🔄 Bu Haftayı Sıfırla
+          </button>
+        </div>
+      </div>
+
+      <div id="active-days-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- Yanlış Defteri / Çözüm Analizi -->
+    <section class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl p-5 sm:p-6 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-[#1e2c47] pb-4">
+        <div>
+          <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <span>📝</span> Kişisel Dijital Yanlış Defteri & Çıkarım Notları
+          </h3>
+          <p class="text-xs text-slate-400">Yalnızca senin hesabına özel saklanır. Denemelerde veya derslerde takıldığın soru kalıplarını kaydet.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          <button onclick="switchAppMode('net-defterim')" class="px-3 py-1.5 rounded-xl bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 text-xs font-bold border border-teal-500/30 flex items-center gap-1.5 transition">
+            <span>📓</span> Net Defterim Arşivini Aç
+          </button>
+          <button onclick="sendNotesToTelegram()" class="px-3 py-1.5 rounded-xl bg-[#229ED9]/15 hover:bg-[#229ED9]/25 text-[#229ED9] text-xs font-semibold border border-[#229ED9]/30 flex items-center gap-1.5 transition">
+            <span>📤</span> Notlarımı Telegram'a Aktar
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Ders & Konu Başlığı</label>
+            <input id="note-topic-input" type="text" placeholder="Örn: TYT Matematik Problemler / Fizik Optik" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Hata Analizi ve Çıkarılan Formül/Taktik</label>
+            <textarea id="note-body-input" rows="4" placeholder="Soruda dikkat etmem gereken anahtar nokta..." class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 resize-none"></textarea>
+          </div>
+          <button onclick="addMistakeNote()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-semibold text-xs transition shadow-md shadow-sky-500/20">
+            ➕ Yanlış Defterime Ekle
+          </button>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="text-xs font-semibold text-slate-400 mb-2.5 flex justify-between items-center">
+            <span>Kayıtlı Soru Analizlerin</span>
+            <span id="saved-notes-count" class="text-slate-500">0 Not</span>
+          </div>
+          <div id="notes-container" class="space-y-3 max-h-[300px] overflow-y-auto pr-1"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+  <!-- ================= NET DEFTERİM GÖRÜNÜMÜ (TEK TUŞLA GEÇİŞ) ================= -->
+  <div id="net-defterim-view" class="hidden">
+    <div class="nd-shell">
+      <aside class="app-sidebar">
+        <div class="brand">
+          <img src="public/logo-white.png" alt="net defterim" class="brand-logo" />
+          <small id="nd-sidebar-sub">ÖĞRENCİ · YKS 2027</small>
+        </div>
+
+        <div style="padding: 0 14px 10px;">
+          <button type="button" class="sidebar-menu-btn return-camp-btn" onclick="switchAppMode('tyt-kampi')">
+            <span>⚡</span>
+            <span>TYT Kampı'na Dön</span>
+          </button>
+        </div>
+
+        <p class="nav-label">ÇALIŞMA ALANIM</p>
+        <ul class="sidebar-menu" id="nd-nav-menu"></ul>
+
+        <p class="nav-label lesson-label">DERSLERİM</p>
+        <ul class="sidebar-menu" id="nd-lessons-menu"></ul>
+        <p class="sidebar-hint" id="nd-lessons-hint">Soru eklediğinde derslerin burada görünecek.</p>
+
+        <div class="sidebar-footer">
+          <div class="target-card">
+            <strong id="nd-target-title">Hedef: YKS 2027</strong>
+            <p id="nd-target-motto">Her yanlış, bir sonraki doğruya.</p>
+          </div>
+          <button type="button" class="profile" onclick="setNetDefterimTab('settings')">
+            <span id="nd-profile-avatar">ND</span>
+            <div>
+              <strong id="nd-profile-name">Öğrenci</strong>
+              <small id="nd-profile-meta">12. sınıf · YKS 2027</small>
+            </div>
+          </button>
+        </div>
+      </aside>
+
+      <div class="nd-main">
+        <header class="topbar">
+          <button type="button" class="secondary" style="padding:6px 11px;min-height:34px;font-size:0.8rem;" onclick="switchAppMode('tyt-kampi')">
+            ⚡ TYT Kampı'na Dön
+          </button>
+          <span class="crumb">
+            <span class="crumb-root">Çalışma alanım / </span>
+            <b id="nd-crumb-label">Genel bakış</b>
+          </span>
+          <span class="private-label welcome-card" style="padding:6px 12px;margin:0;width:auto;box-shadow:none;" id="nd-private-label">Öğrenci'nin defteri</span>
+        </header>
+
+        <main class="workspace" id="nd-workspace-body"></main>
+
+        <nav class="mobile-bar" aria-label="Alt menü" id="nd-mobile-bar">
+          <button type="button" onclick="switchAppMode('tyt-kampi')">
+            <small>⚡ Kamp</small>
+          </button>
+          <button type="button" id="nd-mob-home" onclick="setNetDefterimTab('home')">
+            <small>Genel</small>
+          </button>
+          <button type="button" id="nd-mob-archive" onclick="setNetDefterimTab('archive')">
+            <small>Arşiv</small>
+          </button>
+          <button type="button" id="nd-mob-report" onclick="setNetDefterimTab('report')">
+            <small>Rapor</small>
+          </button>
+          <button type="button" id="nd-mob-exams" onclick="setNetDefterimTab('exams')">
+            <small>Deneme</small>
+          </button>
+          <button type="button" id="nd-mob-notes" onclick="setNetDefterimTab('notes')">
+            <small>Notlar</small>
+          </button>
+          <button type="button" id="nd-mob-settings" onclick="setNetDefterimTab('settings')">
+            <small>Ayarlar</small>
+          </button>
+        </nav>
       </div>
     </div>
   </div>
 
-  <!-- ANA UYGULAMA KABUĞU (Net Defterim Tasarımı) -->
-  <div id="app-shell" class="app-shell" style="display: none;">
-    <aside class="app-sidebar">
-      <div class="brand-lockup">
-        <img src="./public/logo-white.png" alt="Net Defterim" class="brand-logo" />
-        <span class="brand-sub">Kişisel Çalışma Defteri &amp; TYT Kampı</span>
-      </div>
-
-      <button type="button" class="primary-cta" onclick="window.appController.openUploadModal()">
-        <span>+ Soru Yükle</span>
-        <small>Fotoğraf veya metin</small>
-      </button>
-
-      <nav class="side-nav" aria-label="Ana menü" id="side-nav-container">
-        <!-- JS ile 7 sekme render edilir: home, camp, archive, report, exams, notes, settings -->
-      </nav>
-
-      <div class="sidebar-card" id="sidebar-due-card">
-        <!-- JS ile bugünkü tekrar ve kamp özeti render edilir -->
-      </div>
-
-      <div class="sidebar-profile-wrapper" id="sidebar-profile-wrapper">
-        <!-- JS ile aktif öğrenci profili ve hızlı hesap değiştirme menüsü render edilir -->
-      </div>
-    </aside>
-
-    <main class="workspace">
-      <header class="topbar" id="workspace-topbar">
-        <!-- JS ile öğrenci adı, sınıf/hedef, YKS geri sayım, alarm ve aksiyon butonları render edilir -->
-      </header>
-
-      <div id="workspace-content">
-        <!-- JS ile aktif görünüm (home / camp / archive / report / exams / notes / settings) render edilir -->
-      </div>
-    </main>
-
-    <nav class="mobile-bar" aria-label="Alt menü" id="mobile-nav-container">
-      <!-- JS ile mobil alt bar render edilir -->
-    </nav>
+  <!-- NET DEFTERİM SORU YÜKLEME MODALI -->
+  <div id="nd-upload-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4" onclick="if(event.target===this) toggleModal('nd-upload-modal', false)">
+    <div class="bg-[#24292e] border border-[#333a41] rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto text-[#e7eaed]" id="nd-upload-modal-body"></div>
   </div>
 
-  <!-- SORU YÜKLEME MODALI -->
-  <div id="upload-modal" class="dialog-backdrop" style="display: none;" onclick="if(event.target===this) window.appController.closeUploadModal()">
-    <div class="dialog" id="upload-modal-body"></div>
+  <!-- NET DEFTERİM SORU DETAY VE TEKRAR MODALI -->
+  <div id="nd-question-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4" onclick="if(event.target===this) toggleModal('nd-question-modal', false)">
+    <div class="bg-[#24292e] border border-[#333a41] rounded-2xl max-w-3xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto text-[#e7eaed]" id="nd-question-modal-body"></div>
   </div>
 
-  <!-- SORU DETAY & ARALIKLI TEKRAR MODALI -->
-  <div id="question-modal" class="dialog-backdrop" style="display: none;" onclick="if(event.target===this) window.appController.closeQuestionModal()">
-    <div class="dialog dialog-wide" id="question-modal-body"></div>
+  <!-- ================= MODALLAR ================= -->
+
+  <!-- 0. ÇOK KULLANICILI GİRİŞ / KAYIT MODALI (AUTH GATE) -->
+  <div id="auth-modal" class="fixed inset-0 z-50 bg-[#060913]/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl space-y-5 relative">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 via-indigo-600 to-purple-600 flex items-center justify-center text-2xl font-black text-white shadow-lg shadow-sky-500/30">
+          ⚡
+        </div>
+        <div>
+          <h2 class="text-lg font-black text-white">Kişisel TYT & Spor Kampı</h2>
+          <p class="text-xs text-slate-400">Hesabını aç, kendi düzenini ve sporunu gir, sana özel Maarif programın oluşsun.</p>
+        </div>
+      </div>
+
+      <!-- Giriş / Kayıt Sekme Seçici -->
+      <div class="flex gap-2 p-1 rounded-2xl bg-[#0b101c] border border-[#1e2c47]">
+        <button type="button" id="auth-tab-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md">
+          Giriş Yap
+        </button>
+        <button type="button" id="auth-tab-register" onclick="switchAuthTab('register')" class="flex-1 py-2.5 rounded-xl font-bold text-xs bg-[#0b101c] text-slate-400 hover:text-white border border-[#1e2c47]">
+          Yeni Hesap Aç
+        </button>
+      </div>
+
+      <div id="auth-error-box" class="hidden p-3 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300 text-xs font-semibold"></div>
+
+      <!-- GİRİŞ FORMU -->
+      <form id="auth-login-form" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">E-posta Adresin</label>
+          <input id="login-email-input" type="email" required placeholder="ornek@ogrenci.com" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Şifren</label>
+          <input id="login-password-input" type="password" required placeholder="••••••••" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg shadow-sky-500/25 transition">
+          🚀 Hesabıma Giriş Yap
+        </button>
+      </form>
+
+      <!-- YENİ HESAP AÇMA FORMU -->
+      <form id="auth-register-form" onsubmit="handleRegisterSubmit(event)" class="hidden space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Adın ve Soyadın</label>
+          <input id="register-name-input" type="text" required placeholder="Örn: Ahmet Kaya" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">E-posta Adresin</label>
+          <input id="register-email-input" type="email" required placeholder="ahmet@ogrenci.com" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Şifre Belirle</label>
+          <input id="register-password-input" type="password" required placeholder="En az 3 karakter" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500">
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-xs shadow-lg shadow-emerald-500/25 transition">
+          ✨ Hesabımı Oluştur ve Kişisel Düzenimi Kur
+        </button>
+      </form>
+
+      <!-- Cihazdaki Kayıtlı Hesaplar Hızlı Seçim -->
+      <div id="saved-accounts-wrapper" class="hidden pt-3 border-t border-[#1e2c47] space-y-2">
+        <div class="text-[11px] font-semibold text-slate-400">Bu Cihazdaki Hesaplar (Hızlı Seç):</div>
+        <div id="saved-accounts-pills" class="flex flex-wrap gap-1.5"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- 4 ADIMLI KİŞİSEL TYT KAMPI & SPOR SİHİRBAZI MODALI -->
-  <div id="onboarding-wizard-modal" class="dialog-backdrop" style="display: none;" onclick="if(event.target===this) window.appController.closeWizardModal()">
-    <div class="dialog dialog-wide" id="onboarding-wizard-body"></div>
+  <!-- 0.5. 4 ADIMLI KİŞİSEL DÜZEN, SPOR VE YOĞUNLUK SİHİRBAZI (ONBOARDING WIZARD) -->
+  <div id="onboarding-wizard-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[94vh] flex flex-col">
+      <!-- Sihirbaz Başlığı ve 4 Adım Sekmeleri -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#1e2c47]">
+        <div>
+          <h3 class="text-base sm:text-lg font-black text-white">Kişisel Düzen, Spor & Maarif TYT Program Kurulumu</h3>
+          <p class="text-xs text-slate-400">Her şey sana özel: Sabit saatlerini, spor programını ve çalışma yoğunluğunu seç; tek programda birleştirelim.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="flex flex-wrap gap-1.5">
+            <button type="button" id="wizard-step-tab-1" onclick="setWizardStep(1)" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow-md">
+              1. Sabit Düzen
+            </button>
+            <button type="button" id="wizard-step-tab-2" onclick="setWizardStep(2)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#0b101c] text-slate-400 border border-[#1e2c47]">
+              2. Spor Programı
+            </button>
+            <button type="button" id="wizard-step-tab-3" onclick="setWizardStep(3)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#0b101c] text-slate-400 border border-[#1e2c47]">
+              3. Yoğunluk Seç
+            </button>
+            <button type="button" id="wizard-step-tab-4" onclick="setWizardStep(4)" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#0b101c] text-slate-400 border border-[#1e2c47]">
+              4. Birleşik Program
+            </button>
+          </div>
+          <button type="button" id="wizard-close-btn" onclick="toggleModal('onboarding-wizard-modal', false)" class="text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800/70">✕</button>
+        </div>
+      </div>
+
+      <!-- Sihirbaz İçerik Gövdesi -->
+      <div class="overflow-y-auto flex-1 my-4 pr-1">
+
+        <!-- ADIM 1: SABİT DÜZEN GİRİŞİ (ELLE GÜN VE SAAT SEÇME) -->
+        <div id="wizard-step-panel-1" class="space-y-4">
+          <div class="p-4 rounded-2xl bg-[#0b101c] border border-indigo-500/40 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <input id="wizard-school-enabled" type="checkbox" checked class="w-4 h-4 rounded accent-indigo-500 cursor-pointer">
+                <span class="text-xs sm:text-sm font-bold text-white">🏫 Hafta İçi Okul Saatlerim Var (Pazartesi – Cuma)</span>
+              </label>
+              <span class="text-[11px] text-indigo-300 font-semibold">Mezun / Okul yoksa işareti kaldırabilirsin</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Okul Başlangıç Saati</label>
+                <input id="wizard-school-start" type="time" value="08:00" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white font-bold focus:outline-none focus:border-indigo-400">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Okul Çıkış / Bitiş Saati</label>
+                <input id="wizard-school-end" type="time" value="16:00" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white font-bold focus:outline-none focus:border-indigo-400">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-[#0b101c] border-2 border-sky-500/40 space-y-3.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h4 class="text-xs sm:text-sm font-bold text-white">📌 Yeni Sabit Rutin Bloğu Ekle (Okul, Dershane, Özel Ders, Kurs)</h4>
+                <p class="text-[11px] text-slate-400">Hangi günler ve hangi saatler arasında meşgul olduğunu elle seç; bu saatlere asla ders çakıştırılmaz.</p>
+              </div>
+              <div class="flex gap-1.5 text-[11px]">
+                <button type="button" onclick="selectAllWeekdaysInWizard()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">Hafta İçi Tümü</button>
+                <button type="button" onclick="selectWeekendInWizard()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold">Hafta Sonu</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Meşguliyet / Ders Adı</label>
+                <input id="wizard-block-title" type="text" placeholder="Örn: Okul / Matematik Özel Dersi" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white focus:outline-none focus:border-sky-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Başlangıç Saati (Elle Seç)</label>
+                <input id="wizard-block-start" type="time" value="08:30" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white font-bold focus:outline-none focus:border-sky-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Bitiş Saati (Elle Seç)</label>
+                <input id="wizard-block-end" type="time" value="16:00" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white font-bold focus:outline-none focus:border-sky-500">
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <div class="space-y-1">
+                <span class="block text-[11px] font-semibold text-slate-400">Günleri Tek Tek Seç (Birden fazla seçebilirsin):</span>
+                <div id="wizard-day-pills" class="flex flex-wrap gap-1.5"></div>
+              </div>
+              <button type="button" onclick="addWizardFixedBlock()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-extrabold shadow-lg shadow-sky-500/20 transition">
+                + Yeni Blok Ekle ✓
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-slate-300">Eklediğin Sabit Meşguliyet Blokları</span>
+              <span id="wizard-blocks-count" class="text-sky-400 font-bold">0 Blok</span>
+            </div>
+            <div id="wizard-fixed-blocks-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"></div>
+          </div>
+
+          <div class="flex justify-end pt-2">
+            <button type="button" onclick="setWizardStep(2)" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white text-xs font-extrabold shadow-lg">
+              İleri: Spor Programını ve Saatini Seç ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- ADIM 2: POPÜLER SPOR PROGRAMLARI & KENDİ SPOR SAATİNİ YAZMA -->
+        <div id="wizard-step-panel-2" class="hidden space-y-4">
+          <div class="p-4 rounded-2xl bg-[#0b101c] border border-amber-500/40 space-y-3">
+            <div class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+              <span>⏱️</span> <span>Kendi Spor Saatini Kendin Yaz (Bu saatlere TYT dersi konulmaz + 30 dk dinlenme bırakılır)</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Spor Başlangıç Saatin</label>
+                <input id="wizard-sport-start" type="time" value="17:00" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white font-bold focus:outline-none focus:border-amber-400">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Spor Bitiş Saatin</label>
+                <input id="wizard-sport-end" type="time" value="18:30" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white font-bold focus:outline-none focus:border-amber-400">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Özel Spor Notun (İsteğe Bağlı)</label>
+                <input id="wizard-sport-note" type="text" placeholder="Örn: Salondan eve dönüş 25 dk" class="w-full px-3 py-2 rounded-xl bg-[#131b2e] border border-[#1e2c47] text-xs text-white focus:outline-none focus:border-amber-400">
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="text-xs sm:text-sm font-bold text-white">🏋️‍♂️ Sporda Hangi Programı Uyguluyorsunuz?</div>
+            <div id="wizard-sports-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+          </div>
+
+          <div class="flex justify-between items-center pt-2">
+            <button type="button" onclick="setWizardStep(1)" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold">
+              ◀ 1. Adıma Dön
+            </button>
+            <button type="button" onclick="setWizardStep(3)" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white text-xs font-extrabold shadow-lg">
+              İleri: Çalışma Yoğunluğunu Seç ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- ADIM 3: YALNIZCA ÇALIŞMA YOĞUNLUĞU SEÇİMİ -->
+        <div id="wizard-step-panel-3" class="hidden space-y-4">
+          <div class="p-4 rounded-2xl bg-[#0b101c] border border-[#1e2c47] space-y-1">
+            <h4 class="text-sm font-bold text-white">Ne Kadar Yoğunlukta Bir Maarif TYT Programı İstiyorsunuz?</h4>
+            <p class="text-xs text-slate-400">Sıkışık bir program istiyorsan süre uzatılmaz (12 haftada biter); rahat bir program istiyorsan senin tempona göre 22 haftaya esnetilir.</p>
+          </div>
+
+          <div id="wizard-tempo-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3.5"></div>
+
+          <div class="flex justify-between items-center pt-2">
+            <button type="button" onclick="setWizardStep(2)" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold">
+              ◀ Spor Seçimine Dön
+            </button>
+            <button type="button" onclick="setWizardStep(4)" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-xs font-extrabold shadow-lg shadow-emerald-500/20">
+              🚀 Spor ve Dersleri Tek Programda Birleştir ➔
+            </button>
+          </div>
+        </div>
+
+        <!-- ADIM 4: BİRLEŞİK KİŞİSEL PROGRAM ÖNİZLEMESİ VE ONAY -->
+        <div id="wizard-step-panel-4" class="hidden space-y-4">
+          <div class="p-4 rounded-2xl bg-[#0b101c] border border-[#1e2c47] space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="text-xs font-bold text-emerald-400">✅ Sabit Saatlerin, Spor Programın ve Maarif TYT Derslerin Tek Programda Birleştirildi!</div>
+              <div id="wizard-unified-summary"></div>
+            </div>
+            <div id="wizard-preview-day-tabs" class="flex flex-wrap gap-1.5 pt-2 border-t border-[#1e2c47]"></div>
+          </div>
+
+          <div id="wizard-unified-timeline" class="space-y-2"></div>
+
+          <div class="flex flex-wrap justify-between items-center gap-3 pt-2">
+            <button type="button" onclick="setWizardStep(3)" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold">
+              ◀ Yoğunluğu Değiştir
+            </button>
+            <button type="button" onclick="saveAndFinishOnboarding()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 hover:from-emerald-400 hover:to-sky-400 text-white text-xs sm:text-sm font-black shadow-xl shadow-emerald-500/25 transition">
+              ✅ Kişisel Programımı Kaydet ve Kampı Başlat
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
-  <script type="module" src="./js/app.js"></script>
+  <!-- 1. ERTELENEN / DIŞARI ÇIKILAN DERSLER LİSTESİ MODALI -->
+  <div id="shifted-lessons-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-3xl max-w-2xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-[#1e2c47]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-600 text-white flex items-center justify-center text-xl font-bold shadow-md shadow-rose-500/20">
+            ⚡
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-black text-white">Zincirleme Kaydırılan Günler (Domino Çizelgesi)</h4>
+            <p class="text-xs text-slate-400">Dışarı çıktığın günler dinlenme olarak işaretlenir; kalan müfredat sonraki günlere kayarak derslerin çakışmasını engeller.</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('shifted-lessons-modal')" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition">✕</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 my-4 pr-1 space-y-3" id="shifted-lessons-container"></div>
+
+      <div class="pt-4 border-t border-[#1e2c47] flex items-center justify-between gap-3 text-xs">
+        <span class="text-slate-400">💡 Bir günün kaydırmasını geri aldığında tüm müfredat otomatik olarak 1 gün geriye çekilir.</span>
+        <button onclick="toggleModal('shifted-lessons-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. KİŞİSEL BİRLEŞİK SPOR & SAATLİK RUTİN MODALI -->
+  <div id="hourly-routine-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-3xl max-w-4xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-[#1e2c47]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center text-xl font-bold shadow-md shadow-orange-500/20">
+            🏋️‍♂️
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-black text-white">Kişisel Birleşik Spor & Maarif TYT Saatlik Programın</h4>
+            <p class="text-xs text-slate-400">Girdiğin sabit bloklar, seçtiğin spor programı/saatleri ve TYT çalışma bloklarının birleştirilmiş akışı</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('hourly-routine-modal')" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition">✕</button>
+      </div>
+
+      <!-- Günlük Hızlı Filtre Butonları -->
+      <div class="flex gap-2 overflow-x-auto py-3 no-scrollbar border-b border-[#1e2c47]/70 text-xs">
+        <button onclick="filterRoutineDay(0)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Pazartesi</button>
+        <button onclick="filterRoutineDay(1)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Salı</button>
+        <button onclick="filterRoutineDay(2)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Çarşamba</button>
+        <button onclick="filterRoutineDay(3)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Perşembe</button>
+        <button onclick="filterRoutineDay(4)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Cuma</button>
+        <button onclick="filterRoutineDay(5)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Cumartesi</button>
+        <button onclick="filterRoutineDay(6)" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Pazar</button>
+        <button onclick="filterRoutineDay('all')" class="routine-filter-btn px-3 py-1.5 rounded-xl font-bold bg-slate-800 text-slate-300 border border-slate-700">Tüm Haftayı Gör</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 my-3 pr-1 space-y-4" id="routine-schedule-container"></div>
+
+      <div class="pt-3 border-t border-[#1e2c47] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <button onclick="toggleModal('hourly-routine-modal', false); openOnboardingWizard(false);" class="text-sky-400 hover:underline font-semibold">
+          ⚙️ Sabit Saatlerimi veya Spor Programımı Düzenle
+        </button>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="shareHourlyScheduleTelegram()" class="flex-1 sm:flex-initial px-4 py-2 bg-[#229ED9] hover:bg-[#1f8ec3] text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1.5">
+            <span>✈️</span> Saatlik Planı Telegram'a At
+          </button>
+          <button onclick="toggleModal('hourly-routine-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">
+            Kapat
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. CANLI ALARM ÇALMA MODALI -->
+  <div id="alarm-trigger-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-gradient-to-b from-[#17223b] to-[#131b2e] border-2 border-amber-500/80 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl relative text-center space-y-5">
+      <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full bg-amber-500/20 alarm-ring"></div>
+        <div class="w-16 h-16 rounded-full bg-amber-500 text-slate-900 flex items-center justify-center text-3xl font-black shadow-lg shadow-amber-500/50">
+          ⏰
+        </div>
+      </div>
+
+      <div>
+        <span class="text-xs font-extrabold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
+          Günün TYT & Spor Zamanı!
+        </span>
+        <h3 id="alarm-modal-subject" class="text-xl sm:text-2xl font-black text-white mt-2">
+          TYT Matematik
+        </h3>
+        <p id="alarm-modal-topic" class="text-sm font-bold text-amber-300 mt-1">
+          Temel Kavramlar & Sayı Kümeleri
+        </p>
+        <p id="alarm-modal-target" class="text-xs sm:text-sm text-slate-300 mt-1">
+          Hedef: Kişisel Maarif Programın
+        </p>
+        <p id="alarm-modal-quote" class="text-xs italic text-slate-400 mt-2"></p>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <button id="alarm-start-lesson-btn" onclick="stopAlarmAndGoLesson()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold text-sm shadow-xl shadow-emerald-500/25 transition active:scale-95 flex items-center justify-center gap-2">
+          <span>🚀</span> Alarmı Durdur ve Derse Başla
+        </button>
+        <button onclick="snoozeAlarm(5)" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition">
+          💤 5 Dakika Ertele
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ALARM AYARLARI MODALI -->
+  <div id="alarm-settings-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <button onclick="toggleModal('alarm-settings-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">✕</button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl font-bold border border-amber-500/30">
+          ⏰
+        </div>
+        <div>
+          <h4 class="text-base font-bold text-white">Kişisel TYT Hatırlatıcı & Teşvik</h4>
+          <p class="text-xs text-slate-400">Web Audio API & Otomatik Motivasyon Bildirimleri</p>
+        </div>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div class="p-3.5 bg-[#0b101c] rounded-xl border border-[#1e2c47] flex items-center justify-between">
+          <div>
+            <div class="font-bold text-slate-200">Günlük Hatırlatıcı</div>
+            <div class="text-[11px] text-slate-400">Belirlenen saatte zil çalar</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="alarm-toggle-input" onchange="toggleAlarmSetting(this.checked)" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+          </label>
+        </div>
+
+        <div class="p-3.5 bg-[#0b101c] rounded-xl border border-[#1e2c47] space-y-2">
+          <label class="block font-bold text-slate-200">Alarm Saati</label>
+          <div class="flex items-center gap-3">
+            <input type="time" id="alarm-time-input" value="08:00" onchange="saveAlarmTime(this.value)" class="bg-slate-900 border border-[#1e2c47] text-white text-base font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-amber-400 w-36">
+            <span class="text-[11px] text-slate-400">Hesabına özel kaydedilir.</span>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <button onclick="testAlarmRing()" class="flex-1 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-bold transition">
+            🔔 Zili Test Et
+          </button>
+          <button onclick="requestNotificationPermission()" class="flex-1 py-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 font-bold transition">
+            🔔 Bildirim İzni
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. BÜTÜN MÜFREDAT HARİTASI MODALI -->
+  <div id="full-roadmap-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl max-w-5xl w-full p-5 sm:p-7 shadow-2xl relative max-h-[92vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-[#1e2c47]">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center text-xl font-bold">
+            🗺️
+          </div>
+          <div>
+            <h4 class="text-base sm:text-lg font-black text-white">Kişisel Maarif TYT Yol Haritası</h4>
+            <p class="text-xs text-slate-400">Seçtiğin çalışma yoğunluğuna göre ölçeklenmiş tüm kamp haftaların</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('full-roadmap-modal')" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-800/60 hover:bg-slate-800 transition">✕</button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 my-4 pr-1 space-y-5">
+        <div id="roadmap-table-content" class="space-y-4"></div>
+      </div>
+
+      <div class="pt-4 border-t border-[#1e2c47] flex items-center justify-between gap-3">
+        <span class="text-xs text-slate-400">💡 Bir haftaya tıklayarak o haftanın birleşik programına gidebilirsin.</span>
+        <button onclick="toggleModal('full-roadmap-modal')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition">
+          Kapat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. SUPABASE BULUT SENKRONİZASYON MODALI -->
+  <div id="cloud-settings-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#131b2e] border border-[#1e2c47] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
+      <button onclick="toggleModal('cloud-settings-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2">✕</button>
+      <div>
+        <h4 class="text-base font-bold text-white flex items-center gap-2"><span>☁️</span> Bulut Veritabanı (Supabase) Ayarları</h4>
+        <p class="text-xs text-slate-400 mt-1">Uygulama varsayılan olarak cihaz içi çoklu hesap modunda anında çalışır. Cihazlar arası senkronizasyon için Supabase URL ve Anon Key girebilirsiniz.</p>
+      </div>
+      <div id="cloud-status-badge" class="p-2.5 rounded-xl bg-[#0b101c] border border-[#1e2c47] text-xs font-semibold text-amber-300"></div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Supabase Project URL</label>
+          <input id="cloud-url-input" type="url" placeholder="https://xyzcompany.supabase.co" class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3 py-2 text-white">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">Supabase Anon Public Key</label>
+          <input id="cloud-key-input" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI..." class="w-full bg-[#0b101c] border border-[#1e2c47] rounded-xl px-3 py-2 text-white">
+        </div>
+        <button onclick="saveCloudSettingsForm()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold">
+          Kaydet ve Senkronize Et
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Bildirimi -->
+  <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-6 z-50 bg-[#162033] border border-sky-500/40 text-slate-100 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 text-xs transition-all duration-300 opacity-0 pointer-events-none">
+    <span id="toast-icon">✨</span>
+    <span id="toast-message">İşlem gerçekleştirildi.</span>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>
