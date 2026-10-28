@@ -84,3 +84,23 @@ test('PWA manifest.json, sw.js, js/app.js, and index.html module wiring exist an
   assert.ok(html.includes('onboarding-wizard-modal'));
 });
 
+
+test('Unified Net Defterim + TYT Kampı UI stylesheet, brand assets, and 7-view architecture exist', () => {
+  const root = process.cwd();
+  assert.ok(fs.existsSync(path.join(root, 'css/net-defterim.css')));
+  assert.ok(fs.existsSync(path.join(root, 'public/logo-white.png')));
+  assert.ok(fs.existsSync(path.join(root, 'js/meb-topics.js')));
+  assert.ok(fs.existsSync(path.join(root, 'js/net-defterim-core.js')));
+
+  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  assert.ok(html.includes('css/net-defterim.css'));
+  assert.ok(html.includes('app-sidebar'));
+  assert.ok(html.includes('topbar'));
+  assert.ok(html.includes('mobile-bar'));
+  assert.ok(html.includes('welcome-card'));
+
+  const appJs = fs.readFileSync(path.join(root, 'js/app.js'), 'utf8');
+  for (const viewKey of ['home', 'camp', 'archive', 'report', 'exams', 'notes', 'settings']) {
+    assert.ok(appJs.includes(`'${viewKey}'`) || appJs.includes(`"${viewKey}"`));
+  }
+});
