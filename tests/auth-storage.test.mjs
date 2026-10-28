@@ -175,3 +175,30 @@ test('Supabase cloud sync automatically falls back to provisioned tyt-user-state
   assert.equal(relogin.state.fixedBlocks[0].title, 'Geometri Özel Ders');
 });
 
+
+test('createDefaultUserState and saveUserState persist Net Defterim questions, exams, reports, studyNotes, and profile', async () => {
+  const store = createAccountStore({ storage: createMemoryStorage() });
+  const { user, state } = await store.registerUser({
+    name: 'Yusuf Kaya',
+    email: 'yusuf@netdefterim.com',
+    password: '123'
+  });
+
+  assert.equal(state.profile.name, 'Yusuf Kaya');
+  assert.deepEqual(state.questions, []);
+  assert.deepEqual(state.exams, []);
+  assert.deepEqual(state.reports, {});
+  assert.deepEqual(state.studyNotes, []);
+
+  const updated = await store.saveUserState(user.id, {
+    questions: [{ id: 'q1', subject: 'Matematik', topic: 'Fonksiyonlar', status: 'pending', nextReview: '2026-10-29' }],
+    exams: [{ id: 'ex1', title: 'Özdebir TYT-1', examType: 'TYT', totalNet: 88.5 }],
+    reports: { '2026-10': { focusNote: 'Fonksiyon tekrarları', goalNote: '95 net' } },
+    studyNotes: [{ id: 'n1', subject: 'Fizik', grade: '11. Sınıf', topic: 'Optik', body: 'Mercek kuralları' }]
+  });
+
+  assert.equal(updated.questions.length, 1);
+  assert.equal(updated.exams.length, 1);
+  assert.equal(updated.reports['2026-10'].goalNote, '95 net');
+  assert.equal(updated.studyNotes.length, 1);
+});

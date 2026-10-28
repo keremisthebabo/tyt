@@ -1,12 +1,17 @@
-const CACHE_NAME = 'tyt-kampi-multiuser-v4';
+const CACHE_NAME = 'net-defterim-tyt-kampi-v3';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './css/net-defterim.css',
+  './js/app.js',
   './js/curriculum.js',
   './js/scheduler.js',
   './js/auth-storage.js',
-  './js/app.js'
+  './js/meb-topics.js',
+  './js/net-defterim-core.js',
+  './public/logo-white.png',
+  './public/favicon.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -30,11 +35,10 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((res) => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone)).catch(() => {});
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => {});
         return res;
       })
       .catch(() => caches.match(event.request))
   );
 });
-

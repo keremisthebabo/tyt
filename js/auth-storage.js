@@ -21,6 +21,20 @@ function simpleHash(str) {
 export function createDefaultUserState() {
   return {
     onboardingCompleted: false,
+    profile: {
+      name: '',
+      grade: '12. Sınıf',
+      target: 'İlk 10.000',
+      examYear: '2027',
+      examDate: '2027-06-20',
+      motto: 'Her gün 1 net daha ileri!',
+      dailyGoal: 5,
+      school: ''
+    },
+    questions: [],
+    exams: [],
+    reports: {},
+    studyNotes: [],
     schoolConfig: {
       enabled: true,
       title: 'Okul Saatleri',
@@ -85,6 +99,14 @@ export function createAccountStore(options = {}) {
     return {
       ...createDefaultUserState(),
       ...saved,
+      profile: {
+        ...createDefaultUserState().profile,
+        ...(saved.profile || {})
+      },
+      questions: Array.isArray(saved.questions) ? [...saved.questions] : [],
+      exams: Array.isArray(saved.exams) ? [...saved.exams] : [],
+      reports: { ...(saved.reports || {}) },
+      studyNotes: Array.isArray(saved.studyNotes) ? [...saved.studyNotes] : [],
       schoolConfig: {
         ...createDefaultUserState().schoolConfig,
         ...(saved.schoolConfig || {})
@@ -241,6 +263,7 @@ export function createAccountStore(options = {}) {
     saveUsersMap(users);
 
     const initialState = createDefaultUserState();
+    initialState.profile.name = cleanName;
     writeJson(`${USER_STATE_PREFIX}${userId}`, initialState);
 
     const publicUser = { id: userRecord.id, name: userRecord.name, email: userRecord.email };
@@ -295,6 +318,9 @@ export function createAccountStore(options = {}) {
     writeJson(SESSION_KEY, publicUser);
 
     const state = getUserStateSync(userRecord.id);
+    if (!state.profile.name && publicUser.name) {
+      state.profile.name = publicUser.name;
+    }
     return { user: publicUser, state };
   }
 
@@ -308,6 +334,9 @@ export function createAccountStore(options = {}) {
     const sessionUser = readJson(SESSION_KEY, null);
     if (!sessionUser || !sessionUser.id) return null;
     const state = getUserStateSync(sessionUser.id);
+    if (!state.profile.name && sessionUser.name) {
+      state.profile.name = sessionUser.name;
+    }
     return { user: sessionUser, state };
   }
 
@@ -321,6 +350,13 @@ export function createAccountStore(options = {}) {
     const next = {
       ...current,
       ...partialState,
+      profile: partialState.profile
+        ? { ...current.profile, ...partialState.profile }
+        : current.profile,
+      questions: Array.isArray(partialState.questions) ? partialState.questions : current.questions,
+      exams: Array.isArray(partialState.exams) ? partialState.exams : current.exams,
+      reports: partialState.reports !== undefined ? partialState.reports : current.reports,
+      studyNotes: Array.isArray(partialState.studyNotes) ? partialState.studyNotes : current.studyNotes,
       schoolConfig: partialState.schoolConfig
         ? { ...current.schoolConfig, ...partialState.schoolConfig }
         : current.schoolConfig,
@@ -375,4 +411,3 @@ export function createAccountStore(options = {}) {
     listRegisteredUsers
   };
 }
-
