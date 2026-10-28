@@ -1,0 +1,19 @@
+{
+  "name": "Maarif TYT & Spor Kişisel Kamp Uygulaması",
+  "short_name": "TYT Kampı",
+  "description": "Kişiye özel sabit düzen, popüler spor programları ve Maarif modeli TYT müfredatını çakışmasız birleştiren çok kullanıcılı kamp uygulaması.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#0a0f1d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='42' fill='%230ea5e9'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-size='108'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
